@@ -17,10 +17,10 @@ import { serverUrl } from "../App";
 import { setUserData } from "../redux/userSlice";
 
 function UserNav() {
-  const cartItems = 3;
+  const cartItems = 0;
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [profileOpen, setProfileOpen] = React.useState(false);
-  const { userData, city } = useSelector((state) => state.user);
+  const { userData, currentCity } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const handleLogOut = async () => {
     try {
@@ -60,7 +60,7 @@ function UserNav() {
                 className="font-semibold text-gray-800 max-w-[170px] truncate"
                 title={location}
               >
-                {city?.length > 16 ? `${city.slice(0, 16)}...` : city}
+                {currentCity?.length > 16 ? `${currentCity.slice(0, 16)}...` : currentCity}
               </p>
             </div>
           </div>
@@ -181,7 +181,7 @@ function UserNav() {
             <div>
               <p className="text-xs text-gray-500">Deliver to</p>
               <p className="font-semibold text-gray-800">
-                {city?.length > 16 ? `${city.slice(0, 16)}...` : city}
+                {currentCity?.length > 16 ? `${currentCity.slice(0, 16)}...` : currentCity}
               </p>
             </div>
           </div>

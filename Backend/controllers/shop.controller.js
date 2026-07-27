@@ -10,7 +10,7 @@ export const createOrUpdateShop = async (req, res) => {
         message: "All fields are required.",
       });
     }
-    let image;
+    let image = "";
     if (req.file) {
       const uploadedImage = await uploadOnCloudinary(req.file.path);
       if (!uploadedImage) {
@@ -19,7 +19,7 @@ export const createOrUpdateShop = async (req, res) => {
           message: "Image upload failed.",
         });
       }
-      image = uploadedImage.url;
+      image = uploadedImage;
     }
     let shop = await Shop.findOne({ owner: req.userId });
     if (shop) {
@@ -31,7 +31,7 @@ export const createOrUpdateShop = async (req, res) => {
         shop.image = image;
       }
       await shop.save();
-      await shop.populate("owner");
+      await shop.populate(["owner", "items"]);
       return res.status(200).json({
         success: true,
         message: "Shop updated successfully.",
@@ -43,7 +43,7 @@ export const createOrUpdateShop = async (req, res) => {
       city,
       state,
       address,
-      image: image || "",
+      image,
       owner: req.userId,
     });
     await shop.populate("owner");
@@ -61,15 +61,26 @@ export const createOrUpdateShop = async (req, res) => {
   }
 };
 
-export const getMyShop = async(req , res)=>{
+export const getMyShop = async (req, res) => {
   try {
-    const shop = await Shop.findOne({owner:req.userId}).populate("owner items")
-    if(!shop){
-      return null
+    const shop = await Shop.findOne({
+      owner: req.userId,
+    }).populate(["owner", "items"]);
+    if (!shop) {
+      return res.status(404).json({
+        success: false,
+        message: "Shop not found.",
+      });
     }
-
-    return res.shop
+    return res.status(200).json({
+      success: true,
+      shop,
+    });
   } catch (error) {
-    
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error.",
+    });
   }
-}
+};

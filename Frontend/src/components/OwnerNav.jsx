@@ -33,7 +33,6 @@ function OwnerNav() {
     document.addEventListener("mousedown", handleOutside);
     return () => document.removeEventListener("mousedown", handleOutside);
   }, []);
-
   const handleLogOut = async () => {
     try {
       await axios.get(`${serverUrl}/api/auth/signout`, {
@@ -45,15 +44,12 @@ function OwnerNav() {
       console.log(error.message);
     }
   };
-
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-orange-100 bg-white/90 backdrop-blur-xl shadow-sm">
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         {/* ================= NAVBAR ================= */}
-
         <div className="flex h-20 items-center justify-between">
           {/* ================= LOGO ================= */}
-
           <Link to="/owner" className="flex items-center gap-3 group">
             <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-md group-hover:scale-105 transition">
               <GiKnifeFork className="text-white text-xl" />
@@ -63,32 +59,25 @@ function OwnerNav() {
               AxionGo
             </h1>
           </Link>
-
           {/* ================= DESKTOP MENU ================= */}
-
           <div className="hidden md:flex items-center gap-5">
             {/* Add Food */}
-
             {myShopData && (
               <Link
-                to="/owner/add-food"
+                to="/add-item"
                 className="flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-red-500 text-white px-5 py-3 font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition duration-300"
               >
                 <FaPlus />
                 Add Food Item
               </Link>
             )}
-
             {/* Orders */}
-
             <Link
               to="/owner/orders"
               className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-orange-50 transition"
             >
               <FaClipboardList className="text-orange-500 text-xl" />
-
               <span className="font-semibold text-gray-700">My Orders</span>
-
               <span
                 className={`min-w-[24px] h-6 rounded-full text-xs font-bold flex items-center justify-center text-white ${
                   orderCount > 0 ? "bg-red-500" : "bg-gray-400"
@@ -97,9 +86,7 @@ function OwnerNav() {
                 {orderCount > 99 ? "99+" : orderCount}
               </span>
             </Link>
-
             {/* Profile */}
-
             <div className="relative" ref={profileRef}>
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
@@ -143,9 +130,7 @@ function OwnerNav() {
               )}
             </div>
           </div>
-
           {/* ================= MOBILE MENU BUTTON ================= */}
-
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="md:hidden h-11 w-11 rounded-xl bg-orange-100 flex items-center justify-center"
@@ -158,9 +143,7 @@ function OwnerNav() {
           </button>
         </div>
       </div>
-
       {/* ================= MOBILE MENU ================= */}
-
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ${
           menuOpen ? "max-h-[450px]" : "max-h-0"
@@ -178,9 +161,7 @@ function OwnerNav() {
               Add Food Item
             </Link>
           )}
-
           {/* Orders */}
-
           <Link
             to="/owner/orders"
             onClick={() => setMenuOpen(false)}
@@ -190,7 +171,6 @@ function OwnerNav() {
               <FaClipboardList className="text-orange-500" />
               <span className="font-medium text-gray-700">My Orders</span>
             </div>
-
             <span
               className={`min-w-[26px] h-6 rounded-full flex items-center justify-center text-xs font-bold text-white ${
                 orderCount > 0 ? "bg-red-500" : "bg-gray-400"
@@ -199,9 +179,7 @@ function OwnerNav() {
               {orderCount}
             </span>
           </Link>
-
           {/* Profile */}
-
           <div className="rounded-xl border border-orange-100 overflow-hidden">
             <button
               onClick={() => setProfileOpen(!profileOpen)}
@@ -209,23 +187,19 @@ function OwnerNav() {
             >
               <div className="flex items-center gap-3">
                 <FaUserCircle className="text-4xl text-gray-600" />
-
                 <div className="text-left">
                   <p className="text-xs text-gray-500">Signed in as</p>
-
                   <p className="font-semibold text-gray-800">
                     {userData?.fullName}
                   </p>
                 </div>
               </div>
-
               <FaChevronDown
                 className={`transition duration-300 ${
                   profileOpen && "rotate-180"
                 }`}
               />
             </button>
-
             <div
               className={`overflow-hidden transition-all duration-300 ${
                 profileOpen ? "max-h-40" : "max-h-0"
@@ -241,7 +215,6 @@ function OwnerNav() {
               >
                 My Profile
               </Link>
-
               <button
                 onClick={() => {
                   handleLogOut();

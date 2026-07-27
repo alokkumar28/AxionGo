@@ -11,7 +11,7 @@ export const addItem = async (req, res) => {
         message: "All fields are required.",
       });
     }
-    const shop = await Shop.findOne({ owner: req.userId });
+    const shop = await Shop.findOne({ owner: req.userId })
     if (!shop) {
       return res.status(404).json({
         success: false,
@@ -27,7 +27,7 @@ export const addItem = async (req, res) => {
           message: "Image upload failed.",
         });
       }
-      image = uploadedImage.url;
+      image = uploadedImage;
     }
     const item = await Item.create({
       name,
@@ -40,10 +40,11 @@ export const addItem = async (req, res) => {
 
     shop.items.push(item._id);
     await shop.save();
+    await shop.populate(["items" , "owner"])
     return res.status(201).json({
       success: true,
       message: "Item added successfully.",
-      item,
+      shop
     });
   } catch (error) {
     console.error(error);
@@ -52,8 +53,7 @@ export const addItem = async (req, res) => {
       message: "Internal Server Error.",
     });
   }
-}; 
-
+};
 
 export const editItem = async (req, res) => {
   try {
@@ -97,7 +97,7 @@ export const editItem = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Item updated successfully.",
-      item,
+      shop,
     });
   } catch (error) {
     console.error(error);

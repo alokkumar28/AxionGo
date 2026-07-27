@@ -63,7 +63,7 @@ function RegisterShopCard() {
           {/* Button */}
 
           <Link
-            to="/owner/register-shop"
+            to="/create-edit-shop"
             className="group mt-10 flex items-center gap-3 rounded-full bg-gradient-to-r from-orange-500 to-red-500 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl"
           >
             Get Started
