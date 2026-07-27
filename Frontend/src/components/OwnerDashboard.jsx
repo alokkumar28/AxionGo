@@ -7,6 +7,7 @@ import RegisterShopCard from "./RegisterShopCard";
 import { serverUrl } from "../App";
 import { setMyShopData } from "../redux/ownerSlice";
 import axios from "axios";
+import ItemCard from "./ItemCard";
 
 function OwnerDashboard() {
   const navigate = useNavigate();
@@ -150,6 +151,26 @@ function OwnerDashboard() {
                 >
                   + Add Food Item
                 </button>
+              </div>
+            </div>
+          )}
+
+          {myShopData?.items?.length > 0 && (
+            <div className="mt-10">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl font-bold text-gray-800">Your Menu</h2>
+                <span className="bg-orange-100 text-orange-600 px-4 py-2 rounded-full font-semibold">
+                  {myShopData.items.length}{" "}
+                  {myShopData.items.length === 1 ? "Item" : "Items"}
+                </span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-7">
+                {myShopData.items.map((item) => (
+                  <ItemCard
+                    key={item._id}
+                    item={item}
+                  />
+                ))}
               </div>
             </div>
           )}

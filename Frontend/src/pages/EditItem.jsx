@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { FaArrowLeft } from "react-icons/fa";
 import { setMyShopData } from "../redux/ownerSlice";
 
-function AddItem() {
+function EditItem() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [name, setName] = useState("");
@@ -75,7 +75,7 @@ function AddItem() {
             </div>
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-white">
-                Add Food Item
+                Edit Food Item
               </h1>
               <p className="text-orange-100 mt-1">
                 Add delicious dishes to your restaurant menu.
@@ -255,4 +255,4 @@ function AddItem() {
     </div>
   );
 }
-export default AddItem;
+export default EditItem;
