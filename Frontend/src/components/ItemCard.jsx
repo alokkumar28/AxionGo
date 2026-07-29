@@ -1,10 +1,25 @@
+import axios from "axios";
 import React from "react";
 import { FaEdit, FaTrash, FaLeaf } from "react-icons/fa";
 import { GiMeat } from "react-icons/gi";
 import { useNavigate } from "react-router-dom";
+import { serverUrl } from "../App";
 
-function ItemCard({ item }) {
-    const navigate = useNavigate()
+function ItemCard({ item, onDelete }) {
+  const navigate = useNavigate();
+  const handleDelete = async () => {
+    try {
+      const { data } = await axios.delete(
+        `${serverUrl}/api/item/delete-item/${item._id}`,
+        {
+          withCredentials: true,
+        },
+      );
+      onDelete(data.shop);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="group bg-white rounded-3xl border border-orange-100 shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1">
       {/* Image */}
@@ -23,12 +38,13 @@ function ItemCard({ item }) {
         {/* Action Buttons */}
         <div className="absolute top-4 right-4 flex gap-2">
           <button
-            onClick={()=>navigate(`/edit-item/${item.id}`)}
+            onClick={() => navigate(`/edit-item/${item._id}`)}
             className="w-11 h-11 rounded-full bg-white text-orange-500 shadow-lg hover:bg-orange-500 hover:text-white transition"
           >
             <FaEdit className="mx-auto" />
           </button>
           <button
+            onClick={handleDelete}
             className="w-11 h-11 rounded-full bg-white text-red-500 shadow-lg hover:bg-red-500 hover:text-white transition"
           >
             <FaTrash className="mx-auto" />

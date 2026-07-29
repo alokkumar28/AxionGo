@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { GiKnifeFork } from "react-icons/gi";
 import { FaImage, FaCamera } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { serverUrl } from "../App";
 import { useDispatch } from "react-redux";
 import { FaArrowLeft } from "react-icons/fa";
@@ -11,6 +11,8 @@ import { setMyShopData } from "../redux/ownerSlice";
 function EditItem() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { itemId } = useParams();
+  const [currentItem , setCurrentItem] = useState("")
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
@@ -37,16 +39,16 @@ function EditItem() {
       if (backendImage) {
         formData.append("image", backendImage);
       }
-     
+
       const result = await axios.post(
-        `${serverUrl}/api/item/add-item`,
+        `${serverUrl}/api/item/edit-item/${itemId}`,
         formData,
         {
           withCredentials: true,
         },
       );
       dispatch(setMyShopData(result.data.shop));
-      console.log(result.data.shop)
+      console.log(result.data.shop);
       navigate("/");
     } catch (err) {
       console.log(err);
@@ -54,6 +56,28 @@ function EditItem() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const handleGetItemById = async () => {
+        try {
+            const result =await axios.get(`${serverUrl}/api/item/get-by-id/${itemId}`,{withCredentials:true})
+            setCurrentItem(result.data.item)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    handleGetItemById()
+  }, [itemId]);
+
+useEffect(()=>{
+setName(currentItem?.name || "")
+setCategory(currentItem?.category || "")
+setFoodType(currentItem?.foodType || "")
+setPrice(currentItem?.price || 0)
+setItemImage(currentItem?.image)
+},[currentItem])
+
+
   return (
     <div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-orange-50 via-white to-orange-100 flex justify-center items-center px-4 py-5">
       <form

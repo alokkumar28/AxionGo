@@ -21,7 +21,8 @@ function CreateEditShop() {
   const [address, setAddress] = useState(myShopData?.address || currentAddress);
   const [shopImage, setShopImage] = useState(myShopData?.image || null);
   const [backendImage, setBackendImage] = useState(null);
-  const navigate = useNavigate()
+
+  const navigate = useNavigate();
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -32,6 +33,7 @@ function CreateEditShop() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const formData = new FormData();
       formData.append("name", shopName);
@@ -48,7 +50,8 @@ function CreateEditShop() {
       );
       dispatch(setMyShopData(result.data.shop));
       console.log("Shop from backend:", result.data.shop);
-      navigate("/")
+
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -62,12 +65,12 @@ function CreateEditShop() {
         {/* Header Create or Edit Shop*/}
         <div className="relative bg-gradient-to-r from-orange-500 to-red-500 px-6 md:px-10 py-6">
           <button
-  type="button"
-  onClick={() => navigate(-1)}
-  className="absolute top-6 left-6 z-20 h-12 w-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-lg transition-all duration-300 hover:bg-white hover:text-orange-500 hover:scale-105"
->
-  <FaArrowLeft className="text-lg" />
-</button>
+            type="button"
+            onClick={() => navigate(-1)}
+            className="absolute top-6 left-6 z-20 h-12 w-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-lg transition-all duration-300 hover:bg-white hover:text-orange-500 hover:scale-105"
+          >
+            <FaArrowLeft className="text-lg" />
+          </button>
           <div className="flex items-center gap-4 pl-20">
             <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center shadow-lg">
               <GiKnifeFork className="text-4xl text-orange-500" />

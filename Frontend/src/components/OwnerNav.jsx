@@ -77,7 +77,9 @@ function OwnerNav() {
               className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-orange-50 transition"
             >
               <FaClipboardList className="text-orange-500 text-xl" />
-              <span className="font-semibold text-gray-700">My Orders</span>
+              <span className="font-semibold text-gray-700">
+                Pending Orders
+              </span>
               <span
                 className={`min-w-[24px] h-6 rounded-full text-xs font-bold flex items-center justify-center text-white ${
                   orderCount > 0 ? "bg-red-500" : "bg-gray-400"
@@ -153,7 +155,7 @@ function OwnerNav() {
           {/* Add Food */}
           {myShopData && (
             <Link
-              to="/owner/add-food"
+              to="/add-item"
               onClick={() => setMenuOpen(false)}
               className="flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold py-3 shadow-md"
             >
@@ -169,7 +171,7 @@ function OwnerNav() {
           >
             <div className="flex items-center gap-3">
               <FaClipboardList className="text-orange-500" />
-              <span className="font-medium text-gray-700">My Orders</span>
+              <span className="font-medium text-gray-700">Pending Orders</span>
             </div>
             <span
               className={`min-w-[26px] h-6 rounded-full flex items-center justify-center text-xs font-bold text-white ${

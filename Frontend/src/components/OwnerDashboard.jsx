@@ -32,6 +32,10 @@ function OwnerDashboard() {
     fetchMyShop();
   }, [dispatch, myShopData]);
 
+  const handleUIAfterDelete = (updatedShop) => {
+    dispatch(setMyShopData(updatedShop));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100">
       <OwnerNav />
@@ -115,7 +119,9 @@ function OwnerDashboard() {
             <div className="rounded-3xl bg-white border border-orange-100 shadow-lg p-6 hover:-translate-y-1 transition">
               <div className="text-4xl">🍔</div>
               <h3 className="mt-4 text-gray-500 font-medium">Food Items</h3>
-              <h2 className="mt-2 text-4xl font-bold text-orange-500">0</h2>
+              <h2 className="mt-2 text-4xl font-bold text-orange-500">
+                {myShopData.items.length}
+              </h2>
             </div>
             {/* Orders */}
             <div className="rounded-3xl bg-white border border-orange-100 shadow-lg p-6 hover:-translate-y-1 transition">
@@ -169,6 +175,7 @@ function OwnerDashboard() {
                   <ItemCard
                     key={item._id}
                     item={item}
+                    onDelete={handleUIAfterDelete}
                   />
                 ))}
               </div>

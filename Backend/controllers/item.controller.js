@@ -11,7 +11,7 @@ export const addItem = async (req, res) => {
         message: "All fields are required.",
       });
     }
-    const shop = await Shop.findOne({ owner: req.userId })
+    const shop = await Shop.findOne({ owner: req.userId });
     if (!shop) {
       return res.status(404).json({
         success: false,
@@ -40,11 +40,14 @@ export const addItem = async (req, res) => {
 
     shop.items.push(item._id);
     await shop.save();
-    await shop.populate(["items" , "owner"])
+    await shop.populate("owner").populate({
+      path: "items",
+      options: { sort: { updatedAt: -1 } },
+    });
     return res.status(201).json({
       success: true,
       message: "Item added successfully.",
-      shop
+      shop,
     });
   } catch (error) {
     console.error(error);
@@ -57,28 +60,9 @@ export const addItem = async (req, res) => {
 
 export const editItem = async (req, res) => {
   try {
-    const { itemId } = req.params;
+    const itemId = req.params.itemId;
     const { name, category, foodType, price } = req.body;
-    const shop = await Shop.findOne({ owner: req.userId });
-    if (!shop) {
-      return res.status(404).json({
-        success: false,
-        message: "Shop not found.",
-      });
-    }
-    const item = await Item.findById(itemId);
-    if (!item) {
-      return res.status(404).json({
-        success: false,
-        message: "Item not found.",
-      });
-    }
-    if (item.shop.toString() !== shop._id.toString()) {
-      return res.status(403).json({
-        success: false,
-        message: "You are not authorized to edit this item.",
-      });
-    }
+    let image;
     if (req.file) {
       const uploadedImage = await uploadOnCloudinary(req.file.path);
       if (!uploadedImage) {
@@ -89,14 +73,100 @@ export const editItem = async (req, res) => {
       }
       item.image = uploadedImage.url;
     }
-    if (name) item.name = name;
-    if (category) item.category = category;
-    if (foodType) item.foodType = foodType;
-    if (price) item.price = price;
-    await item.save();
+    const item = await Item.findByIdAndUpdate(
+      itemId,
+      {
+        name,
+        category,
+        foodType,
+        price,
+      },
+      { new: true },
+    );
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: "Item not found.",
+      });
+    }
+
+    const shop = await Shop.findOne({ owner: req.userId }).populate({
+      path: "items",
+      options: { sort: { updatedAt: -1 } },
+    });
+
     return res.status(200).json({
       success: true,
       message: "Item updated successfully.",
+      shop,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error.",
+    });
+  }
+};
+
+export const getItemById = async (req, res) => {
+  try {
+    const itemId = req.params.itemId;
+    const item = await Item.findById(itemId);
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: "Item not found.",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Item found successfully.",
+      item,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Get Item Error.",
+    });
+  }
+};
+
+export const deleteItem = async (req, res) => {
+  try {
+    const shop = await Shop.findOne({ owner: req.userId });
+    const itemId = req.params.itemId;
+    const item = await Item.findById(itemId);
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: "Item not found.",
+      });
+    }
+    if (!shop) {
+      return res.status(404).json({
+        success: false,
+        message: "Please create a shop first.",
+      });
+    }
+    if (!shop.items.includes(item._id)) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to delete this item.",
+      });
+    }
+    await Item.deleteOne({ _id: itemId });
+    shop.items.pull(itemId);
+    await shop.save();
+
+    await shop.populate("owner").populate({
+      path: "items",
+      options: { sort: { updatedAt: -1 } },
+    });
+    return res.status(200).json({
+      success: true,
+      message: "Item deleted successfully.",
       shop,
     });
   } catch (error) {
