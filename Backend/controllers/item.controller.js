@@ -40,7 +40,8 @@ export const addItem = async (req, res) => {
 
     shop.items.push(item._id);
     await shop.save();
-    await shop.populate("owner").populate({
+    await shop.populate("owner");
+    await shop.populate({
       path: "items",
       options: { sort: { updatedAt: -1 } },
     });
@@ -60,9 +61,19 @@ export const addItem = async (req, res) => {
 
 export const editItem = async (req, res) => {
   try {
-    const itemId = req.params.itemId;
+    const { itemId } = req.params;
     const { name, category, foodType, price } = req.body;
-    let image;
+    const item = await Item.findById(itemId);
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: "Item not found.",
+      });
+    }
+    item.name = name;
+    item.category = category;
+    item.foodType = foodType;
+    item.price = price;
     if (req.file) {
       const uploadedImage = await uploadOnCloudinary(req.file.path);
       if (!uploadedImage) {
@@ -71,30 +82,21 @@ export const editItem = async (req, res) => {
           message: "Image upload failed.",
         });
       }
-      item.image = uploadedImage.url;
+      item.image = uploadedImage;
     }
-    const item = await Item.findByIdAndUpdate(
-      itemId,
-      {
-        name,
-        category,
-        foodType,
-        price,
-      },
-      { new: true },
-    );
-    if (!item) {
+    await item.save();
+    const shop = await Shop.findOne({ owner: req.userId });
+    if (!shop) {
       return res.status(404).json({
         success: false,
-        message: "Item not found.",
+        message: "Please create a shop first.",
       });
     }
-
-    const shop = await Shop.findOne({ owner: req.userId }).populate({
+    await shop.populate("owner");
+    await shop.populate({
       path: "items",
       options: { sort: { updatedAt: -1 } },
     });
-
     return res.status(200).json({
       success: true,
       message: "Item updated successfully.",
@@ -160,7 +162,8 @@ export const deleteItem = async (req, res) => {
     shop.items.pull(itemId);
     await shop.save();
 
-    await shop.populate("owner").populate({
+    await shop.populate("owner");
+    await shop.populate({
       path: "items",
       options: { sort: { updatedAt: -1 } },
     });

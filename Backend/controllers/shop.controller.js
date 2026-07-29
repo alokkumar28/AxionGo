@@ -63,18 +63,20 @@ export const createOrUpdateShop = async (req, res) => {
 
 export const getMyShop = async (req, res) => {
   try {
-    const shop = await Shop.findOne({
+    let shop = await Shop.findOne({
       owner: req.userId,
-    }).populate("owner").populate({
-      path:"items",
-      options:{sort:{updatedAt:-1}}
-    })
+    }).populate("owner");
+
     if (!shop) {
       return res.status(404).json({
         success: false,
         message: "Shop not found.",
       });
     }
+    await shop.populate({
+      path: "items",
+      options: { sort: { updatedAt: -1 } },
+    });
     return res.status(200).json({
       success: true,
       shop,
