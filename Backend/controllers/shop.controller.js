@@ -89,3 +89,27 @@ export const getMyShop = async (req, res) => {
     });
   }
 };
+
+export const getShopByCity = async (req, res) => {
+  try {
+    const { city } = req.params;
+    const shops = await Shop.find({
+      city: { $regex: new RegExp(`^${city}$`, "i") },
+    }).populate("items");
+    if (shops.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Shops not found.",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      shops,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error.",
+    });
+  }
+};

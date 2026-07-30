@@ -1,49 +1,84 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FoodCard from "./FoodCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import suggestedFoods from "../category";
+import suggestedFoods from "../foodSuggestions";
+
 function FoodSuggestions() {
-  const scrollRef = useRef(null);
+  const foodScrollRef = useRef(null);
+  const [foodScrollLeft, setFoodScrollLeft] = useState(false);
+  const [foodScrollRight, setFoodScrollRight] = useState(false);
+  const updateButton = () => {
+    const element = foodScrollRef.current;
+    if (!element) return;
+    setFoodScrollLeft(element.scrollLeft > 0);
+    setFoodScrollRight(
+      element.scrollLeft + element.clientWidth < element.scrollWidth - 5,
+    );
+  };
+
   const scroll = (direction) => {
-    if (!scrollRef.current) return;
-    const amount = scrollRef.current.clientWidth;
-    scrollRef.current.scrollBy({
-      left: direction === "left" ? -amount : amount,
+    if (!foodScrollRef.current) return;
+
+    foodScrollRef.current.scrollBy({
+      left:
+        direction === "left"
+          ? -foodScrollRef.current.clientWidth
+          : foodScrollRef.current.clientWidth,
       behavior: "smooth",
     });
   };
 
+  useEffect(() => {
+    const element = foodScrollRef.current;
+    if (!element) return;
+    updateButton();
+    element.addEventListener("scroll", updateButton);
+    window.addEventListener("resize", updateButton);
+    return () => {
+      element.removeEventListener("scroll", updateButton);
+      window.removeEventListener("resize", updateButton);
+    };
+  }, []);
+
   return (
     <section className="relative">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-3xl font-bold text-gray-800">Popular Near You</h2>
-          <p className="text-gray-500 mt-1">
-            Freshly prepared dishes from nearby restaurants
-          </p>
-        </div>
-        <div className="hidden md:flex items-center gap-3">
+      <div className="mb-6">
+        <h2 className="text-3xl font-bold text-gray-800">Popular Near You</h2>
+        <p className="text-gray-500 mt-1">
+          Freshly prepared dishes from nearby restaurants
+        </p>
+      </div>
+      <div className="relative">
+        {foodScrollLeft && (
           <button
             onClick={() => scroll("left")}
-            className="w-11 h-11 rounded-full border bg-white hover:bg-orange-500 hover:text-white transition shadow"
+            className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-20
+              w-12 h-12 rounded-full bg-white border shadow-lg
+              items-center justify-center
+              hover:bg-orange-500 hover:text-white transition"
           >
-            <FaChevronLeft className="mx-auto" />
+            <FaChevronLeft />
           </button>
+        )}
+        {foodScrollRight && (
           <button
             onClick={() => scroll("right")}
-           className="w-11 h-11 rounded-full border bg-white hover:bg-orange-500 hover:text-white transition shadow"
+            className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 z-20
+              w-12 h-12 rounded-full bg-white border shadow-lg
+              items-center justify-center
+              hover:bg-orange-500 hover:text-white transition"
           >
-            <FaChevronRight className="mx-auto" />
+            <FaChevronRight />
           </button>
+        )}
+        <div
+          ref={foodScrollRef}
+          className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-3"
+        >
+          {suggestedFoods.map((food) => (
+            <FoodCard key={food.id} food={food} />
+          ))}
         </div>
-      </div>
-      <div
-        ref={scrollRef}
-        className="flex gap-6 overflow-x-auto scroll-smooth pb-3 no-scrollbar"
-      >
-        {suggestedFoods.map((food) => (
-          <FoodCard key={food.id} food={food} />
-        ))}
       </div>
     </section>
   );
