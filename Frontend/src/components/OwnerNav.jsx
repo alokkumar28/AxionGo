@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaUserCircle,
   FaBars,
@@ -16,6 +16,7 @@ import { serverUrl } from "../App";
 import { setUserData } from "../redux/userSlice";
 
 function OwnerNav() {
+  const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [profileOpen, setProfileOpen] = React.useState(false);
   const { userData } = useSelector((state) => state.user);
@@ -40,6 +41,7 @@ function OwnerNav() {
       });
 
       dispatch(setUserData(null));
+      navigate("/signin")
     } catch (error) {
       console.log(error.message);
     }

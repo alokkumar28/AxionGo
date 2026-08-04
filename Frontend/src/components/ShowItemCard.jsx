@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { FaStar, FaLeaf, FaRegStar } from "react-icons/fa";
 import { GiMeat } from "react-icons/gi";
 import { FiPlus, FiMinus } from "react-icons/fi";
-import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../redux/userSlice";
-function FoodCard({ food }) {
+import { useDispatch, useSelector } from "react-redux";
+function ShowItemCard({ item }) {
   const cartItem = useSelector((state) =>
-    state.user.cartItems.find((i) => i._id === food.id),
-  );
-  const quantity = cartItem?.quantity || 0;
+  state.user.cartItems.find((i) => i._id === item._id)
+);
+const quantity = cartItem?.quantity || 0;
   const dispatch = useDispatch();
   const renderRatingStars = () => {
     const stars = [];
-    const rating = Math.round(food.rating?.average || 0);
+    const rating = Math.round(item.rating?.average || 0);
     for (let i = 1; i <= 5; i++) {
       stars.push(
         i <= rating ? (
@@ -27,32 +27,47 @@ function FoodCard({ food }) {
 
   const handleAddToCart = (newQuantity) => {
     if (newQuantity === 0) {
-      dispatch(removeFromCart(food.id));
+      dispatch(removeFromCart(item._id));
       return;
     }
     dispatch(
       addToCart({
-        _id: food.id,
-        name: food.name,
-        price: food.price,
-        image: food.image,
-        shop: food.shop,
+        _id: item._id,
+        name: item.name,
+        price: item.price,
+        image: item.image,
+        shop: item.shop,
         quantity: newQuantity,
-        foodType: food.foodType,
+        foodType: item.foodType,
       }),
     );
   };
   return (
-    <div className="min-w-[250px] sm:min-w-[270px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group cursor-pointer">
       {/* Image */}
-      <div className="overflow-hidden">
+      <div className="relative overflow-hidden">
         <img
-          src={food.image}
-          alt={food.name}
-          className="h-44 w-full object-cover group-hover:scale-110 transition-transform duration-500"
+          src={item.image}
+          alt={item.name}
+          loading="lazy"
+          className="h-48 w-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
+        <div className="absolute top-3 left-3">
+          <span className="bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium flex items-center gap-1">
+            {item.foodType === "veg" ? (
+              <>
+                <FaLeaf className="text-green-600" />
+                Veg
+              </>
+            ) : (
+              <>
+                <GiMeat className="text-red-600" />
+                Non Veg
+              </>
+            )}
+          </span>
+        </div>
       </div>
-
       {/* Content */}
       <div className="p-4">
         {/* Rating */}
@@ -62,50 +77,37 @@ function FoodCard({ food }) {
               {renderRatingStars()}
             </div>
             <span className="text-sm font-semibold text-gray-800">
-              {food.rating?.average?.toFixed(1) || "0.0"}
+              {item.rating?.average?.toFixed(1) || "0.0"}
             </span>
             <span className="text-sm text-gray-500">
-              ({food.rating?.count || 0})
+              ({item.rating?.count || 0})
             </span>
           </div>
-          <span className="text-sm text-gray-500">{food.time || "20 min"}</span>
+          <span className="text-sm text-gray-500">
+            {item.time || "20 mins"}
+          </span>
         </div>
-        {/* Name */}
-        <h3 className="text-lg font-bold text-gray-900 truncate">
-          {food.name}
+        {/* Item Name */}
+        <h3 className="text-xl font-bold text-gray-800 truncate">
+          {item.name}
         </h3>
-
-        {/* Shop */}
-        <p className="text-sm text-gray-500 truncate mt-1">
-          {food.shop?.name || "Restaurant"}
-        </p>
-
-        {/* Bottom */}
-        <div className="flex items-center justify-between mt-5">
-          <div className="flex items-center gap-2">
-            {food.foodType === "veg" ? (
-              <FaLeaf className="text-green-600 text-lg" />
-            ) : (
-              <GiMeat className="text-red-600 text-lg" />
-            )}
-
-            <span className="text-xl font-bold text-gray-900">
-              ₹{food.price}
-            </span>
-          </div>
-
+        {/* Shop Name */}
+        <p className="text-sm text-gray-500 truncate mt-1">{item.shop?.name}</p>
+        {/* Price & Button */}
+        <div className="flex justify-between items-center mt-5">
+          <span className="text-xl font-bold text-gray-900">₹{item.price}</span>
           {quantity === 0 ? (
             <button
               onClick={() => {
                 handleAddToCart(1);
               }}
-              className="flex items-center gap-2 px-5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold transition"
+              className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-full font-semibold transition"
             >
               Add
               <FiPlus className="text-lg" />
             </button>
           ) : (
-            <div className="flex items-center rounded-xl bg-orange-500 text-white overflow-hidden">
+            <div className="flex items-center bg-orange-500 rounded-full overflow-hidden text-white">
               <button
                 onClick={() => {
                   const newQuantity = Math.max(quantity - 1, 0);
@@ -115,7 +117,7 @@ function FoodCard({ food }) {
               >
                 <FiMinus className="text-lg" />
               </button>
-              <span className="min-w-[40px] text-center font-semibold">
+              <span className="min-w-10 text-center font-semibold">
                 {quantity}
               </span>
               <button
@@ -134,5 +136,4 @@ function FoodCard({ food }) {
     </div>
   );
 }
-
-export default FoodCard;
+export default ShowItemCard;

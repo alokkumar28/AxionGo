@@ -181,4 +181,32 @@ export const deleteItem = async (req, res) => {
   }
 };
 
-
+export const getItemByCity = async (req, res) => {
+  try {
+    const { city } = req.params;
+    const shops = await Shop.find({
+      city: { $regex: new RegExp(`^${city}$`, "i") },
+    });
+    if (shops.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No shops found in this city.",
+      });
+    }
+    const shopIds = shops.map((shop) => shop._id);
+    const items = await Item.find({
+      shop: { $in: shopIds },
+    }).populate("shop", "name image city");
+    return res.status(200).json({
+      success: true,
+      count: items.length,
+      items,
+    });
+  } catch (error) {
+    console.error("Get Items By City Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};

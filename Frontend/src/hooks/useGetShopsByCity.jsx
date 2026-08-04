@@ -15,7 +15,6 @@ function useGetShopByCity() {
           `${serverUrl}/api/shop/get-by-city/${currentCity}`,
           { withCredentials: true },
         );
-        console.log(`${serverUrl}/api/shop/get-by-city/${currentCity}`);
         dispatch(setShopsInMyCity(result.data.shops));
         console.log(result.data.shops);
       } catch (error) {

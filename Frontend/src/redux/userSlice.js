@@ -5,8 +5,11 @@ export const userSlice = createSlice({
     userData: null,
     currentCity: null,
     currentState: null,
-    currentAddress:null,
-    shopsInMyCity:null
+    currentAddress: null,
+    shopsInMyCity: null,
+    itemsInMyCity: [],
+    cartItems: [],
+    totalAmount: 0,
   },
   reducers: {
     setUserData: (state, action) => {
@@ -21,11 +24,59 @@ export const userSlice = createSlice({
     setCurrentAddress: (state, action) => {
       state.currentAddress = action.payload;
     },
-    setShopsInMyCity: (state , action)=>{
+    setShopsInMyCity: (state, action) => {
       state.shopsInMyCity = action.payload;
-    }
+    },
+    setItemsInMyCity: (state, action) => {
+      state.itemsInMyCity = action.payload;
+    },
+    addToCart: (state, action) => {
+      const cartItem = action.payload;
+
+      const existingItem = state.cartItems.find((i) => i._id === cartItem._id);
+
+      if (existingItem) {
+        existingItem.quantity = cartItem.quantity;
+      } else {
+        state.cartItems.push(cartItem);
+      }
+      state.totalAmount = state.cartItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0,
+      );
+    },
+    updateQuantity: (state, action) => {
+      const { id, quantity } = action.payload;
+      const item = state.cartItems.find((i) => i._id === id);
+      if (!item) return;
+      if (item) {
+        item.quantity = quantity;
+      }
+
+      state.totalAmount = state.cartItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0,
+      );
+    },
+    removeFromCart: (state, action) => {
+      state.cartItems = state.cartItems.filter((i) => i._id !== action.payload);
+      state.totalAmount = state.cartItems.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0,
+      );
+    },
   },
 });
 
-export const { setUserData, setCurrentCity, setCurrentState , setCurrentAddress , setShopsInMyCity } = userSlice.actions;
+export const {
+  setUserData,
+  setCurrentCity,
+  setCurrentState,
+  setCurrentAddress,
+  setShopsInMyCity,
+  setItemsInMyCity,
+  addToCart,
+  removeFromCart,
+  updateQuantity,
+} = userSlice.actions;
 export default userSlice.reducer;

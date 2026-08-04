@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaSearch,
   FaShoppingCart,
@@ -17,10 +17,12 @@ import { serverUrl } from "../App";
 import { setUserData } from "../redux/userSlice";
 
 function UserNav() {
-  const cartItems = 0;
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [profileOpen, setProfileOpen] = React.useState(false);
-  const { userData, currentCity } = useSelector((state) => state.user);
+  const { userData, currentCity, cartItems } = useSelector(
+    (state) => state.user,
+  );
   const dispatch = useDispatch();
   const handleLogOut = async () => {
     try {
@@ -28,6 +30,7 @@ function UserNav() {
         withCredentials: true,
       });
       dispatch(setUserData(null));
+      navigate("/signin");
     } catch (error) {
       console.log(error.message);
     }
@@ -60,7 +63,9 @@ function UserNav() {
                 className="font-semibold text-gray-800 max-w-[170px] truncate"
                 title={location}
               >
-                {currentCity?.length > 16 ? `${currentCity.slice(0, 16)}...` : currentCity}
+                {currentCity?.length > 16
+                  ? `${currentCity.slice(0, 16)}...`
+                  : currentCity}
               </p>
             </div>
           </div>
@@ -92,9 +97,9 @@ function UserNav() {
               <div className="h-11 w-11 rounded-full bg-orange-100 flex items-center justify-center group-hover:bg-orange-500 transition-all duration-300">
                 <FaShoppingCart className="text-xl text-orange-500 group-hover:text-white" />
               </div>
-              {cartItems > 0 && (
+              {cartItems.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[11px] font-bold min-w-[20px] h-5 rounded-full flex items-center justify-center shadow-md">
-                  {cartItems > 99 ? "99+" : cartItems}
+                  {cartItems.length > 99 ? "99+" : cartItems.length}
                 </span>
               )}
             </Link>
@@ -130,7 +135,10 @@ function UserNav() {
                     My Profile
                   </Link>
 
-                  <button onClick={handleLogOut} className="w-full flex items-center gap-2 px-5 py-3 text-red-500 hover:bg-red-50 transition">
+                  <button
+                    onClick={handleLogOut}
+                    className="w-full flex items-center gap-2 px-5 py-3 text-red-500 hover:bg-red-50 transition"
+                  >
                     <IoLogOutOutline className="text-lg" />
                     Logout
                   </button>
@@ -181,7 +189,9 @@ function UserNav() {
             <div>
               <p className="text-xs text-gray-500">Deliver to</p>
               <p className="font-semibold text-gray-800">
-                {currentCity?.length > 16 ? `${currentCity.slice(0, 16)}...` : currentCity}
+                {currentCity?.length > 16
+                  ? `${currentCity.slice(0, 16)}...`
+                  : currentCity}
               </p>
             </div>
           </div>
@@ -203,7 +213,7 @@ function UserNav() {
           >
             <span className="font-medium text-gray-700">Cart</span>
             <span className="bg-orange-500 text-white text-xs px-3 py-1 rounded-full">
-              {cartItems} Items
+              {cartItems.length} Items
             </span>
           </Link>
 
@@ -249,11 +259,10 @@ function UserNav() {
                 <button
                   className="w-full flex items-center gap-2 px-5 py-3 text-red-500 hover:bg-red-50 transition"
                   onClick={() => {
-                     handleLogOut();
+                    handleLogOut();
                     setProfileOpen(false);
                     setMenuOpen(false);
                   }}
-                
                 >
                   <IoLogOutOutline className="text-lg" />
                   Logout
