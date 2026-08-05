@@ -9,6 +9,10 @@ function CartPage() {
   const navigate = useNavigate();
 
   const { cartItems, totalAmount } = useSelector((state) => state.user);
+  const gstRate = 18;
+  const gstAmount = (totalAmount * gstRate) / 100;
+  const deliveryFee = totalAmount > 500 ? 0 : 40;
+  const totalAmountWithDelivery = totalAmount + deliveryFee + gstAmount;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -40,9 +44,7 @@ function CartPage() {
             </div>
 
             <div>
-              <h2 className="text-3xl font-bold">
-                Welcome to AxionGo
-              </h2>
+              <h2 className="text-3xl font-bold">Welcome to AxionGo</h2>
 
               <p className="text-orange-100 mt-2 max-w-3xl">
                 Fresh food, lightning-fast delivery and your favourite
@@ -94,10 +96,7 @@ function CartPage() {
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-6">
               {cartItems.map((item) => (
-                <CartItemCard
-                  key={item._id}
-                  item={item}
-                />
+                <CartItemCard key={item._id} item={item} />
               ))}
             </div>
 
@@ -127,13 +126,13 @@ function CartPage() {
                     <div className="flex justify-between text-gray-600">
                       <span>Delivery Fee</span>
                       <span className="font-semibold text-green-600">
-                        FREE
+                        {deliveryFee === 0 ? "Free" : `₹${deliveryFee}`}
                       </span>
                     </div>
 
                     <div className="flex justify-between text-gray-600">
                       <span>Taxes & Charges</span>
-                      <span>₹0</span>
+                      <span>₹{gstAmount.toFixed(2)}</span>
                     </div>
 
                     <hr />
@@ -142,7 +141,7 @@ function CartPage() {
                       <span>Total</span>
 
                       <span className="text-orange-600">
-                        ₹{totalAmount}
+                        ₹{totalAmountWithDelivery}
                       </span>
                     </div>
                   </div>
@@ -155,9 +154,7 @@ function CartPage() {
                   </button>
 
                   <div className="mt-6 bg-orange-50 rounded-xl p-4">
-                    <p className="text-sm text-gray-600">
-                      ✅ Secure Payment
-                    </p>
+                    <p className="text-sm text-gray-600">✅ Secure Payment</p>
 
                     <p className="text-sm text-gray-600 mt-2">
                       🚚 Free Delivery
