@@ -52,7 +52,7 @@ function OwnerNav() {
         {/* ================= NAVBAR ================= */}
         <div className="flex h-20 items-center justify-between">
           {/* ================= LOGO ================= */}
-          <Link to="/owner" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-3 group">
             <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-md group-hover:scale-105 transition">
               <GiKnifeFork className="text-white text-xl" />
             </div>
@@ -75,7 +75,7 @@ function OwnerNav() {
             )}
             {/* Orders */}
             <Link
-              to="/owner/orders"
+              to="/my-orders"
               className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-orange-50 transition"
             >
               <FaClipboardList className="text-orange-500 text-xl" />
@@ -167,7 +167,7 @@ function OwnerNav() {
           )}
           {/* Orders */}
           <Link
-            to="/owner/orders"
+            to="/my-orders"
             onClick={() => setMenuOpen(false)}
             className="flex items-center justify-between rounded-xl border border-orange-100 px-4 py-3 hover:bg-orange-50 transition"
           >

@@ -44,7 +44,6 @@ function FoodCard({ food }) {
   };
   return (
     <div className="min-w-[250px] sm:min-w-[270px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-      {/* Image */}
       <div className="overflow-hidden">
         <img
           src={food.image}
@@ -52,10 +51,7 @@ function FoodCard({ food }) {
           className="h-44 w-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
       </div>
-
-      {/* Content */}
       <div className="p-4">
-        {/* Rating */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-0.5">
@@ -70,17 +66,12 @@ function FoodCard({ food }) {
           </div>
           <span className="text-sm text-gray-500">{food.time || "20 min"}</span>
         </div>
-        {/* Name */}
         <h3 className="text-lg font-bold text-gray-900 truncate">
           {food.name}
         </h3>
-
-        {/* Shop */}
         <p className="text-sm text-gray-500 truncate mt-1">
           {food.shop?.name || "Restaurant"}
         </p>
-
-        {/* Bottom */}
         <div className="flex items-center justify-between mt-5">
           <div className="flex items-center gap-2">
             {food.foodType === "veg" ? (
@@ -88,12 +79,10 @@ function FoodCard({ food }) {
             ) : (
               <GiMeat className="text-red-600 text-lg" />
             )}
-
             <span className="text-xl font-bold text-gray-900">
               ₹{food.price}
             </span>
           </div>
-
           {quantity === 0 ? (
             <button
               onClick={() => {

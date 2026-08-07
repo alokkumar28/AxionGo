@@ -19,6 +19,7 @@ import axios from "axios";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { serverUrl } from "../App";
+import { addMyOrder } from "../redux/userSlice";
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -163,11 +164,10 @@ function CheckOut() {
           withCredentials: true,
         },
       );
-      console.log(result.data);
-      if (result.data.success) {
-        // clear cart
-        navigate("/order-placed")
-      }
+      console.log(result.data.order);
+      dispatch(addMyOrder(result.data.order))
+      navigate("/order-placed")
+
     } catch (error) {
       console.error(error);
       alert(error.response?.data?.message || "Failed to place order.");

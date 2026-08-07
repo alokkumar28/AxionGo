@@ -39,15 +39,11 @@ function OwnerDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100">
       <OwnerNav />
-
-      {/* Loading */}
       {myShopData === undefined && (
         <div className="flex justify-center items-center h-[70vh]">
           Loading...
         </div>
       )}
-
-      {/* Shop not registered */}
       {myShopData === null && (
         <div className="py-10">
           <RegisterShopCard />
@@ -56,10 +52,7 @@ function OwnerDashboard() {
 
       {myShopData && (
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-8">
-          {/* Shop Card */}
-
           <div className="relative overflow-hidden rounded-3xl bg-white border border-orange-100 shadow-xl">
-            {/* Edit Button */}
             <button
               onClick={() => navigate("/create-edit-shop")}
               className="absolute top-5 right-5 z-20 h-12 w-12 rounded-full bg-orange-500 hover:bg-orange-600 transition flex items-center justify-center shadow-lg"
@@ -67,21 +60,18 @@ function OwnerDashboard() {
               <FaEdit className="text-white text-lg" />
             </button>
             <div className="grid lg:grid-cols-2 gap-8 p-6 md:p-8">
-              {/* LEFT IMAGE */}
               <div className="relative">
                 <img
                   src={myShopData.image}
                   alt={myShopData.name}
                   className="w-full h-64 md:h-80 lg:h-[340px] rounded-3xl object-cover"
                 />
-                {/* Name Overlay */}
                 <div className="absolute inset-x-0 bottom-0 rounded-b-3xl bg-gradient-to-t from-black/80 via-black/30 to-transparent px-6 py-5">
                   <h1 className="text-white text-2xl md:text-3xl font-bold">
                     {myShopData.name}
                   </h1>
                 </div>
               </div>
-              {/* RIGHT DETAILS */}
               <div className="flex flex-col justify-center">
                 <div className="inline-flex items-center gap-3 w-fit rounded-full bg-orange-100 text-orange-600 px-5 py-2 font-semibold">
                   <FaStore />
@@ -94,7 +84,6 @@ function OwnerDashboard() {
                   Your restaurant is now visible on AxionGo. Customers can
                   discover your shop and browse your menu.
                 </p>
-                {/* Address */}
                 <div className="mt-8 flex items-start gap-4">
                   <div className="h-12 w-12 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
                     <FaMapMarkerAlt className="text-orange-500 text-xl" />
@@ -113,9 +102,7 @@ function OwnerDashboard() {
               </div>
             </div>
           </div>
-          {/* Statistics */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-8">
-            {/* Food Items */}
             <div className="rounded-3xl bg-white border border-orange-100 shadow-lg p-6 hover:-translate-y-1 transition">
               <div className="text-4xl">🍔</div>
               <h3 className="mt-4 text-gray-500 font-medium">Food Items</h3>
@@ -123,20 +110,17 @@ function OwnerDashboard() {
                 {myShopData.items.length}
               </h2>
             </div>
-            {/* Orders */}
             <div className="rounded-3xl bg-white border border-orange-100 shadow-lg p-6 hover:-translate-y-1 transition">
               <div className="text-4xl">📦</div>
               <h3 className="mt-4 text-gray-500 font-medium">Orders</h3>
               <h2 className="mt-2 text-4xl font-bold text-orange-500">0</h2>
             </div>
-            {/* Rating */}
             <div className="rounded-3xl bg-white border border-orange-100 shadow-lg p-6 hover:-translate-y-1 transition">
               <div className="text-4xl">⭐</div>
               <h3 className="mt-4 text-gray-500 font-medium">Rating</h3>
               <h2 className="mt-2 text-4xl font-bold text-orange-500">0.0</h2>
             </div>
           </div>
-          {/* Add Food CTA */}
           {myShopData?.items?.length === 0 && (
             <div className="mt-10 overflow-hidden rounded-3xl bg-gradient-to-r from-orange-500 to-red-500 shadow-2xl">
               <div className="px-6 md:px-12 py-10 text-center text-white">

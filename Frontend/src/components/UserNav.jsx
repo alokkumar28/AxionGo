@@ -86,7 +86,7 @@ function UserNav() {
           <div className="hidden md:flex items-center gap-6">
             {/* Orders */}
             <Link
-              to="/orders"
+              to="/my-orders"
               className="font-medium text-gray-700 hover:text-orange-500 transition"
             >
               My Orders
@@ -198,7 +198,7 @@ function UserNav() {
 
           {/* Orders */}
           <Link
-            to="/orders"
+            to="/my-orders"
             onClick={() => setMenuOpen(false)}
             className="flex items-center justify-between py-4 border-b border-orange-100 text-gray-700 font-medium hover:text-orange-500"
           >
