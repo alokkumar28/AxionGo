@@ -10,6 +10,7 @@ function FoodCard({ food }) {
   );
   const quantity = cartItem?.quantity || 0;
   const dispatch = useDispatch();
+  
   const renderRatingStars = () => {
     const stars = [];
     const rating = Math.round(food.rating?.average || 0);

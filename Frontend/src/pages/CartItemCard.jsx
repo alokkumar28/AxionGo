@@ -19,7 +19,6 @@ function CartItemCard({ item }) {
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4">
       <div className="flex flex-col md:flex-row md:items-center gap-5">
-        {/* Food Image */}
         <div className="w-full md:w-36 h-40 md:h-28 flex-shrink-0">
           <img
             src={item.image}
@@ -27,7 +26,6 @@ function CartItemCard({ item }) {
             className="w-full h-full object-cover rounded-xl"
           />
         </div>
-        {/* Food Details */}
         <div className="flex-1">
           <h2 className="text-xl font-bold text-gray-800">{item.name}</h2>
           <p className="mt-2 text-gray-600 font-medium">
@@ -36,11 +34,8 @@ function CartItemCard({ item }) {
           <p className="mt-1 text-lg font-bold text-orange-600">
             ₹{totalPrice}
           </p>
-          
         </div>
-        {/* Quantity Controls */}
         <div className="flex md:flex-col items-center justify-between md:justify-center gap-4">
-          {/* Increase / Decrease */}
           <div className="flex items-center bg-orange-50 rounded-xl overflow-hidden border border-orange-200">
             <button
               onClick={() => handleDecrease(item._id, item.quantity)}
@@ -60,7 +55,6 @@ function CartItemCard({ item }) {
               <FaPlus className="text-sm text-orange-600" />
             </button>
           </div>
-          {/* Delete */}
           <button
             onClick={() => dispatch(removeFromCart(item._id))}
             className="w-11 h-11 rounded-full bg-red-100 hover:bg-red-500 hover:text-white text-red-600 transition flex items-center justify-center"

@@ -37,7 +37,7 @@ function AddItem() {
       if (backendImage) {
         formData.append("image", backendImage);
       }
-     
+
       const result = await axios.post(
         `${serverUrl}/api/item/add-item`,
         formData,
@@ -46,7 +46,6 @@ function AddItem() {
         },
       );
       dispatch(setMyShopData(result.data.shop));
-      console.log(result.data.shop)
       navigate("/");
     } catch (err) {
       console.log(err);
@@ -60,7 +59,6 @@ function AddItem() {
         onSubmit={handleSubmit}
         className="w-full max-w-7xl rounded-3xl overflow-hidden bg-white shadow-2xl border border-orange-100"
       >
-        {/* Header */}
         <div className="relative bg-gradient-to-r from-orange-500 to-red-500 px-8 py-6">
           <button
             type="button"
@@ -83,11 +81,8 @@ function AddItem() {
             </div>
           </div>
         </div>
-        {/* Body */}
         <div className="grid lg:grid-cols-2 gap-10 p-6 md:p-10">
-          {/* LEFT */}
           <div className="space-y-6">
-            {/* Food Name */}
             <div>
               <label className="block font-semibold text-gray-700 mb-2 text-lg">
                 Food Name
@@ -100,7 +95,6 @@ function AddItem() {
                 className="w-full h-14 rounded-2xl border-2 border-orange-200 bg-orange-50 px-5 text-lg outline-none focus:border-orange-500"
               />
             </div>
-            {/* Category */}
             <div>
               <label className="block font-semibold text-gray-700 mb-2 text-lg">
                 Category
@@ -124,7 +118,6 @@ function AddItem() {
                 <option>Others</option>
               </select>
             </div>
-            {/* Price */}
             <div>
               <label className="block font-semibold text-gray-700 mb-2 text-lg">
                 Price (₹)
@@ -138,8 +131,6 @@ function AddItem() {
                 className="w-full h-14 rounded-2xl border-2 border-orange-200 bg-orange-50 px-5 text-lg outline-none focus:border-orange-500"
               />
             </div>
-
-            {/* Food Type */}
             <div>
               <label className="block font-semibold text-gray-700 mb-4 text-lg">
                 Food Type
@@ -170,7 +161,6 @@ function AddItem() {
               </div>
             </div>
           </div>
-          {/* RIGHT */}
           <div className="flex flex-col">
             <label className="font-semibold text-gray-700 text-lg mb-3">
               Food Image
@@ -193,9 +183,6 @@ function AddItem() {
                     alt="Food Preview"
                     className="w-full h-full object-cover rounded-3xl"
                   />
-
-                  {/* Change Image */}
-
                   <div className="absolute bottom-5 right-5 h-14 w-14 rounded-full bg-white/90 backdrop-blur-md shadow-xl flex items-center justify-center">
                     <FaCamera className="text-orange-500 text-2xl" />
                   </div>
@@ -209,20 +196,17 @@ function AddItem() {
                   <h2 className="mt-6 text-2xl font-bold text-gray-800">
                     Upload Food Image
                   </h2>
-
                   <p className="mt-3 text-gray-500 leading-7 max-w-sm">
                     Upload a delicious and high-quality image of your food.
                     Attractive photos increase customer engagement and boost
                     your chances of receiving more orders.
                   </p>
-
                   <div className="mt-6 px-7 py-3 rounded-xl bg-orange-500 text-white font-semibold shadow-lg">
                     Choose Image
                   </div>
                 </div>
               )}
             </label>
-            {/* Tips */}
             <div className="mt-5 rounded-2xl border border-orange-200 bg-orange-50 p-5">
               <h3 className="font-bold text-orange-600">
                 Tips for better sales
@@ -236,7 +220,6 @@ function AddItem() {
             </div>
           </div>
         </div>
-        {/* Footer */}
         <div className="border-t border-orange-100 bg-orange-50 px-6 md:px-10 py-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
             <p className="text-gray-500 text-center sm:text-left">

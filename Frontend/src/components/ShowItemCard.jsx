@@ -44,7 +44,6 @@ const quantity = cartItem?.quantity || 0;
   };
   return (
     <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group cursor-pointer">
-      {/* Image */}
       <div className="relative overflow-hidden">
         <img
           src={item.image}
@@ -68,9 +67,7 @@ const quantity = cartItem?.quantity || 0;
           </span>
         </div>
       </div>
-      {/* Content */}
       <div className="p-4">
-        {/* Rating */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-0.5">
@@ -87,13 +84,10 @@ const quantity = cartItem?.quantity || 0;
             {item.time || "20 mins"}
           </span>
         </div>
-        {/* Item Name */}
         <h3 className="text-xl font-bold text-gray-800 truncate">
           {item.name}
         </h3>
-        {/* Shop Name */}
         <p className="text-sm text-gray-500 truncate mt-1">{item.shop?.name}</p>
-        {/* Price & Button */}
         <div className="flex justify-between items-center mt-5">
           <span className="text-xl font-bold text-gray-900">₹{item.price}</span>
           {quantity === 0 ? (

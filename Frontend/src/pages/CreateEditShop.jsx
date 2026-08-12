@@ -49,8 +49,6 @@ function CreateEditShop() {
         { withCredentials: true },
       );
       dispatch(setMyShopData(result.data.shop));
-      console.log("Shop from backend:", result.data.shop);
-
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -62,7 +60,6 @@ function CreateEditShop() {
         onSubmit={handleSubmit}
         className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl border border-orange-100 overflow-hidden"
       >
-        {/* Header Create or Edit Shop*/}
         <div className="relative bg-gradient-to-r from-orange-500 to-red-500 px-6 md:px-10 py-6">
           <button
             type="button"
@@ -86,11 +83,8 @@ function CreateEditShop() {
             </div>
           </div>
         </div>
-        {/* Body */}
         <div className="grid lg:grid-cols-2 gap-8 p-6 md:p-10">
-          {/* LEFT SECTION */}
           <div className="space-y-6">
-            {/* Shop Name */}
             <div>
               <label className="block text-lg font-semibold text-gray-700 mb-2">
                 Shop Name
@@ -106,7 +100,6 @@ function CreateEditShop() {
                 />
               </div>
             </div>
-            {/* City & State */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label className="block text-lg font-semibold text-gray-700 mb-2">
@@ -136,7 +129,6 @@ function CreateEditShop() {
                 />
               </div>
             </div>
-            {/* Address */}
             <div>
               <label className="block text-lg font-semibold text-gray-700 mb-2">
                 Complete Address
@@ -150,7 +142,6 @@ function CreateEditShop() {
               />
             </div>
           </div>
-          {/* RIGHT SECTION */}
           <div className="flex flex-col">
             <label className="text-lg font-semibold text-gray-700 mb-3">
               Shop Image
@@ -209,7 +200,6 @@ function CreateEditShop() {
             </div>
           </div>
         </div>
-        {/* Footer */}
         <div className="border-t border-orange-100 bg-orange-50 px-6 md:px-10 py-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
             <p className="text-gray-500 text-center sm:text-left">

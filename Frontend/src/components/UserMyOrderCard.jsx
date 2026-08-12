@@ -6,16 +6,24 @@ import {
   FaMoneyBillWave,
 } from "react-icons/fa";
 import { MdDeliveryDining } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 function UserMyOrderCard({ order, shopOrder }) {
+  const navigate = useNavigate();
   const orderStatus = shopOrder.status || "Pending";
   const orderStatusColor =
-    orderStatus === "Delivered"
-      ? "bg-green-100 text-green-700"
-      : orderStatus === "Preparing"
-        ? "bg-orange-100 text-orange-700"
-        : orderStatus === "Picked Up"
-          ? "bg-blue-100 text-blue-700"
-          : "bg-yellow-100 text-yellow-700";
+    orderStatus === "Pending"
+      ? "bg-yellow-100 text-yellow-700"
+      : orderStatus === "Accepted"
+        ? "bg-blue-100 text-blue-700"
+        : orderStatus === "Preparing"
+          ? "bg-orange-100 text-orange-700"
+          : orderStatus === "Out for Delivery"
+            ? "bg-purple-100 text-purple-700"
+            : orderStatus === "Delivered"
+              ? "bg-green-100 text-green-700"
+              : orderStatus === "Cancelled"
+                ? "bg-red-100 text-red-700"
+                : "bg-gray-100 text-gray-700";
 
   const orderDate = new Date(order.createdAt);
 
@@ -131,7 +139,7 @@ function UserMyOrderCard({ order, shopOrder }) {
           </div>
         </div>
         <button
-          onClick={() => console.log(shopOrder)}
+          onClick={() => navigate(`/track-order/${order._id}`)}
           className="w-full mt-8 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-4 rounded-2xl transition"
         >
           Track Order

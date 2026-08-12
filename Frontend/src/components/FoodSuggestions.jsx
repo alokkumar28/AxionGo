@@ -18,7 +18,6 @@ function FoodSuggestions() {
 
   const scroll = (direction) => {
     if (!foodScrollRef.current) return;
-
     foodScrollRef.current.scrollBy({
       left:
         direction === "left"

@@ -72,10 +72,6 @@ function SignIn() {
         { withCredentials: true },
       );
       dispatch(setUserData(data.user))
-      if (data.success) {
-        console.log("Google Login Success");
-        console.log(data.user);
-      }
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -90,15 +86,11 @@ function SignIn() {
 
   return (
     <div className="min-h-screen overflow-hidden bg-gradient-to-br from-orange-50 via-white to-red-50 relative flex items-center justify-center px-5 py-10">
-      {/* Background Blur */}
       <div className="absolute w-96 h-96 bg-orange-300 rounded-full blur-[150px] opacity-40 -top-24 -left-24"></div>
       <div className="absolute w-80 h-80 bg-red-300 rounded-full blur-[150px] opacity-30 bottom-0 right-0"></div>
       <div className="absolute w-72 h-72 bg-yellow-300 rounded-full blur-[130px] opacity-20 top-1/2 left-1/2"></div>
-      {/* Card */}
       <div className="relative w-full max-w-6xl bg-white/70 backdrop-blur-2xl rounded-[35px] shadow-2xl overflow-hidden border border-white">
         <div className="grid lg:grid-cols-2">
-          {/* LEFT */}
-
           <div className="hidden lg:flex flex-col justify-center bg-gradient-to-br from-orange-500 to-red-500 text-white p-14 relative overflow-hidden">
             <div className="absolute w-72 h-72 bg-white/10 rounded-full -top-24 -right-24"></div>
             <div className="absolute w-44 h-44 bg-white/10 rounded-full bottom-0 left-0"></div>
@@ -132,11 +124,7 @@ function SignIn() {
               </div>
             </div>
           </div>
-
-          {/* RIGHT */}
-
           <div className="bg-white px-6 md:px-10 lg:px-12 py-10">
-            {/* Mobile Logo */}
             <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
               <div className="h-14 w-14 rounded-full bg-orange-500 text-white flex items-center justify-center">
                 <UtensilsCrossed />
@@ -161,6 +149,7 @@ function SignIn() {
                   onChange={(e) => {
                     setEmail(e.target.value);
                   }}
+                  required
                   placeholder="Email Address"
                   className="w-full border border-gray-300 rounded-xl py-4 pl-12 pr-4 outline-none focus:ring-4 focus:ring-orange-100 focus:border-orange-500 transition"
                 />
@@ -180,6 +169,7 @@ function SignIn() {
                     setPassword(e.target.value);
                   }}
                   placeholder="Password"
+                  required
                   className="w-full border border-gray-300 rounded-xl py-4 pl-12 pr-12 outline-none focus:ring-4 focus:ring-orange-100 focus:border-orange-500 transition"
                 />
                 <button
@@ -193,7 +183,7 @@ function SignIn() {
 
               {/* Terms */}
               <div className="flex items-start gap-3">
-                <input type="checkbox" className="accent-orange-500 mt-1" />
+                <input type="checkbox" required className="accent-orange-500 mt-1" />
                 <p className="text-sm text-gray-600">
                   I agree to the
                   <span className="text-orange-500 font-semibold cursor-pointer">
