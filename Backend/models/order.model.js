@@ -41,13 +41,25 @@ const shopOrderSchema = new mongoose.Schema(
     assignment: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "DeliveryAssignment",
-      default:null
+      default: null,
     },
-    assignedDeliveryBoy:{
+    assignedDeliveryBoy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      default:null
-    }
+      default: null,
+    },
+    deliveryOtp: {
+      type: String,
+      default: null,
+    },
+    otpExpires: {
+      type: Date,
+      default: null,
+    },
+    deliveredAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true },
 );
@@ -72,6 +84,18 @@ const orderSchema = new mongoose.Schema(
       type: Number,
     },
     shopOrders: [shopOrderSchema],
+    paymentFlag:{
+      type:Boolean,
+      default:false
+    },
+    razorpayOrderId:{
+      type:String,
+      default:""
+    },
+    razorpayPaymentId:{
+      type:String,
+      default:""
+    }
   },
   { timestamps: true },
 );

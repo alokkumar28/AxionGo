@@ -1,28 +1,30 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { FaMapMarkerAlt, FaUtensils } from "react-icons/fa";
+
 function ShopCard({ shop }) {
+  const navigate = useNavigate();
+
   return (
-    <div className="min-w-[320px] max-w-[320px] bg-white rounded-2xl border shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
-      <div className="h-52 overflow-hidden">
-        <img
-          src={shop.image}
-          alt={shop.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-        />
+    <div className="min-w-[210px] sm:min-w-[220px] md:min-w-[230px] max-w-[230px] bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 group">
+      <div className="h-28 sm:h-30 md:h-32 overflow-hidden">
+        <img src={shop.image} alt={shop.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
       </div>
-      <div className="p-5">
-        <h3 className="text-xl font-semibold text-gray-800 truncate">
-          {shop.name}
-        </h3>
-        <div className="flex items-center mt-3 text-gray-500 text-sm">
-          <FaMapMarkerAlt className="text-orange-500 mr-2" />
-          <span className="truncate">{shop.city}</span>
+
+      <div className="p-2.5 sm:p-3">
+        <h3 className="text-sm sm:text-base font-bold text-[#172b4d] truncate">{shop.name}</h3>
+
+        <div className="flex items-center gap-1.5 mt-2 text-gray-500">
+          <FaMapMarkerAlt className="text-orange-500 text-xs shrink-0" />
+          <span className="text-[10px] sm:text-xs truncate">{shop.city}</span>
         </div>
-        <div className="flex items-center mt-2 text-gray-500 text-sm">
-          <FaUtensils className="text-orange-500 mr-2" />
-          <span>{shop.items?.length || 0} Items</span>
+
+        <div className="flex items-center gap-1.5 mt-1.5 text-gray-500">
+          <FaUtensils className="text-orange-500 text-xs shrink-0" />
+          <span className="text-[10px] sm:text-xs">{shop.items?.length || 0} Items</span>
         </div>
-        <button className="w-full mt-5 bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 rounded-xl transition">
+
+        <button onClick={() => navigate(`/shop/${shop._id}`)} className="w-full mt-2.5 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-1.5 rounded-lg text-[10px] sm:text-xs transition">
           View Menu
         </button>
       </div>

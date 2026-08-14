@@ -1,283 +1,49 @@
-const suggestedFoods = [
-  {
-    id: 1,
-    name: "Chicken Biryani",
-    image: "https://images.unsplash.com/photo-1701579231305-d84d8af9a3fd?w=800",
-    shop: null,
-    category: "North Indian",
-    price: 249,
-    foodType: "non veg",
-  },
-  {
-    id: 2,
-    name: "Veg Burger",
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800",
-    shop: null,
-    category: "Burgers",
-    price: 149,
-    foodType: "veg",
-  },
-  {
-    id: 3,
-    name: "Paneer Pizza",
-    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800",
-    shop: null,
-    category: "Pizza",
-    price: 329,
-    foodType: "veg",
-  },
-  {
-    id: 4,
-    name: "Fried Chicken",
-    image: "https://images.unsplash.com/photo-1562967916-eb82221dfb92?w=800",
-    shop: null,
-    category: "Fast Food",
-    price: 279,
-    foodType: "non veg",
-  },
-  {
-    id: 5,
-    name: "Masala Dosa",
-    image: "https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=800",
-    shop: null,
-    category: "South Indian",
-    price: 129,
-    foodType: "veg",
-  },
-  {
-    id: 6,
-    name: "Mutton Curry",
-    image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=800",
-    shop: null,
-    category: "Main Course",
-    price: 349,
-    foodType: "non veg",
-  },
-  {
-    id: 7,
-    name: "French Fries",
-    image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=800",
-    shop: null,
-    category: "Snacks",
-    price: 99,
-    foodType: "veg",
-  },
-  {
-    id: 8,
-    name: "Samosa",
-    image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=800",
-    shop: null,
-    category: "Snacks",
-    price: 49,
-    foodType: "veg",
-  },
-  {
-    id: 9,
-    name: "Chicken Shawarma",
-    image: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=800",
-    shop: null,
-    category: "Fast Food",
-    price: 189,
-    foodType: "non veg",
-  },
-  {
-    id: 10,
-    name: "Butter Chicken",
-    image: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=800",
-    shop: null,
-    category: "North Indian",
-    price: 329,
-    foodType: "non veg",
-  },
-  {
-    id: 11,
-    name: "Dal Makhani",
-    image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800",
-    shop: null,
-    category: "North Indian",
-    price: 219,
-    foodType: "veg",
-  },
-  {
-    id: 12,
-    name: "Brownie",
-    image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=800",
-    shop: null,
-    category: "Desserts",
-    price: 129,
-    foodType: "veg",
-  },
-  {
-    id: 13,
-    name: "Idli Sambar",
-    image: "https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=800",
-    shop: null,
-    category: "South Indian",
-    price: 99,
-    foodType: "veg",
-  },
-  {
-    id: 14,
-    name: "Medu Vada",
-    image: "https://images.unsplash.com/photo-1630383249896-424e482df921?w=800",
-    shop: null,
-    category: "South Indian",
-    price: 119,
-    foodType: "veg",
-  },
-  {
-    id: 15,
-    name: "Cheese Pizza",
-    image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800",
-    shop: null,
-    category: "Pizza",
-    price: 299,
-    foodType: "veg",
-  },
-  {
-    id: 16,
-    name: "Pav Bhaji",
-    image: "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=800",
-    shop: null,
-    category: "Fast Food",
-    price: 149,
-    foodType: "veg",
-  },
-  {
-    id: 17,
-    name: "Double Cheese Burger",
-    image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800",
-    shop: null,
-    category: "Burgers",
-    price: 199,
-    foodType: "non veg",
-  },
-  {
-    id: 18,
-    name: "Paneer Burger",
-    image: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=800",
-    shop: null,
-    category: "Burgers",
-    price: 169,
-    foodType: "veg",
-  },
-  {
-    id: 19,
-    name: "Grilled Sandwich",
-    image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800",
-    shop: null,
-    category: "Sandwiches",
-    price: 149,
-    foodType: "veg",
-  },
-  {
-    id: 20,
-    name: "Chicken Sandwich",
-    image: "https://images.unsplash.com/photo-1553909489-cd47e0907980?w=800",
-    shop: null,
-    category: "Sandwiches",
-    price: 189,
-    foodType: "non veg",
-  },
-  {
-    id: 21,
-    name: "Hakka Noodles",
-    image: "https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=800",
-    shop: null,
-    category: "Chinese",
-    price: 199,
-    foodType: "veg",
-  },
-  {
-    id: 22,
-    name: "Chicken Manchurian",
-    image: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800",
-    shop: null,
-    category: "Chinese",
-    price: 259,
-    foodType: "non veg",
-  },
-  {
-    id: 23,
-    name: "Veg Fried Rice",
-    image: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800",
-    shop: null,
-    category: "Chinese",
-    price: 189,
-    foodType: "veg",
-  },
-  {
-    id: 24,
-    name: "Spring Rolls",
-    image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=800",
-    shop: null,
-    category: "Chinese",
-    price: 159,
-    foodType: "veg",
-  },
-  {
-    id: 25,
-    name: "Pasta Alfredo",
-    image: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800",
-    shop: null,
-    category: "Main Course",
-    price: 279,
-    foodType: "veg",
-  },
-  {
-    id: 26,
-    name: "Grilled Fish",
-    image: "https://images.unsplash.com/photo-1559847844-5315695dadae?w=800",
-    shop: null,
-    category: "Main Course",
-    price: 399,
-    foodType: "non veg",
-  },
-  {
-    id: 27,
-    name: "Chocolate Cake",
-    image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800",
-    shop: null,
-    category: "Desserts",
-    price: 179,
-    foodType: "veg",
-  },
-  {
-    id: 28,
-    name: "Ice Cream Sundae",
-    image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=800",
-    shop: null,
-    category: "Desserts",
-    price: 149,
-    foodType: "veg",
-  },
-  {
-    id: 29,
-    name: "Tandoori Chicken",
-    image: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=800",
-    shop: null,
-    category: "Others",
-    price: 359,
-    foodType: "non veg",
-  },
-  {
-    id: 30,
-    name: "Fish Curry",
-    image: "https://images.unsplash.com/photo-1559847844-5315695dadae?w=800",
-    shop: null,
-    category: "Others",
-    price: 329,
-    foodType: "non veg",
-  },
-  {
-    id: 31,
-    name: "Falafel Wrap",
-    image: "https://images.unsplash.com/photo-1543332164-6e82f355badc?w=800",
-    shop: null,
-    category: "Others",
-    price: 189,
-    foodType: "veg",
-  },
-];
+import { exp } from "firebase/firestore/pipelines";
 
-export default suggestedFoods;
+const image1 =
+  "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80";
+
+const image2 =
+  "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80";
+
+const image3 =
+  "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80";
+
+const image4 =
+  "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80";
+
+const image5 =
+  "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80";
+
+const image6 =
+  "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=800&q=80";
+
+const image7 =
+  "https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=800&q=80";
+
+const image8 =
+  "https://images.unsplash.com/photo-1601050690117-94f5f6fa8bd7?auto=format&fit=crop&w=800&q=80";
+
+const image9 =
+  "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80";
+
+const image10 =
+  "https://images.unsplash.com/photo-1562967916-eb82221dfb92?auto=format&fit=crop&w=800&q=80";
+
+const image11 =
+  "https://images.unsplash.com/photo-1543332164-6e82f355badc?auto=format&fit=crop&w=800&q=80";
+
+export const categories = [
+  { category: "Snacks", image: image1 },
+  { category: "Main Course", image: image2 },
+  { category: "Desserts", image: image3 },
+  { category: "Pizza", image: image4 },
+  { category: "Burgers", image: image5 },
+  { category: "Sandwiches", image: image6 },
+  { category: "South Indian", image: image7 },
+  { category: "North Indian", image: image8 },
+  { category: "Chinese", image: image9 },
+  { category: "Fast Food", image: image10 },
+  { category: "Others", image: image11 },
+  { category: "All", image: image11 },
+];

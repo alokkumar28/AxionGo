@@ -210,3 +210,84 @@ export const getItemByCity = async (req, res) => {
     });
   }
 };
+
+export const getItemByShop = async (req, res) => {
+  try {
+    const { shopId } = req.params;
+    const shop = await Shop.findById(shopId).populate("items");
+    if (!shop) {
+      return res.status(404).json({
+        success: false,
+        message: "Shop not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      shop,
+      items: shop.items,
+    });
+  } catch (error) {
+    console.log("GET ITEMS BY SHOP ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to get shop items",
+      error: error.message,
+    });
+  }
+};
+
+export const searchItems = async (req, res) => {
+  try {
+    const { city, query } = req.query;
+    if (!city || !query?.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "City and search query are required.",
+      });
+    }
+    const shops = await Shop.find({
+      city: {
+        $regex: new RegExp(`^${city.trim()}$`, "i"),
+      },
+    }).select("_id");
+    if (shops.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No restaurants found in this city.",
+      });
+    }
+    const shopIds = shops.map((shop) => shop._id);
+    const escapedQuery = query.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const items = await Item.find({
+      shop: {
+        $in: shopIds,
+      },
+      $or: [
+        {
+          name: {
+            $regex: escapedQuery,
+            $options: "i",
+          },
+        },
+        {
+          category: {
+            $regex: escapedQuery,
+            $options: "i",
+          },
+        },
+      ],
+    }).populate("shop", "name image");
+    return res.status(200).json({
+      success: true,
+      message: items.length ? "Search results found." : "No food items found.",
+      items,
+    });
+  } catch (error) {
+    console.log("SEARCH ITEMS ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to search food items.",
+      error: error.message,
+    });
+  }
+};

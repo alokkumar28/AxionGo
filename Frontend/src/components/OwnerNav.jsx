@@ -1,13 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  FaUserCircle,
-  FaBars,
-  FaTimes,
-  FaChevronDown,
-  FaPlus,
-  FaClipboardList,
-} from "react-icons/fa";
+import { FaUserCircle, FaBars, FaTimes, FaChevronDown, FaPlus, FaClipboardList } from "react-icons/fa";
 import { GiKnifeFork } from "react-icons/gi";
 import { IoLogOutOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,77 +27,90 @@ function OwnerNav() {
     document.addEventListener("mousedown", handleOutside);
     return () => document.removeEventListener("mousedown", handleOutside);
   }, []);
+
   const handleLogOut = async () => {
     try {
       await axios.get(`${serverUrl}/api/auth/signout`, {
         withCredentials: true,
       });
-
       dispatch(setUserData(null));
       navigate("/signin");
     } catch (error) {
       console.log(error.message);
     }
   };
+
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-orange-100 bg-white/90 backdrop-blur-xl shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 lg:px-8">
-        <div className="flex h-20 items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-md group-hover:scale-105 transition">
-              <GiKnifeFork className="text-white text-xl" />
+    <nav className="sticky top-0 z-50 w-full bg-white border-b border-orange-100 shadow-sm">
+      <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-8">
+        <div className="h-14 sm:h-16 flex items-center justify-between">
+
+          <Link to="/" className="flex items-center gap-2 shrink-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-sm">
+              <GiKnifeFork className="text-white text-base sm:text-lg" />
             </div>
-            <h1 className="text-2xl font-extrabold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+            <h1 className="text-xl sm:text-2xl font-extrabold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
               AxionGo
             </h1>
           </Link>
-          <div className="hidden md:flex items-center gap-5">
+
+          <div className="hidden md:flex items-center gap-2 lg:gap-4">
+
             {myShopData && (
-              <Link
-                to="/add-item"
-                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-red-500 text-white px-5 py-3 font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition duration-300"
-              >
-                <FaPlus />
-                Add Food Item
-              </Link>
+              <button
+  onClick={() => navigate("/add-item")}
+  className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-3.5 lg:px-4 py-2 rounded-lg text-sm font-semibold transition"
+>
+  <FaPlus className="text-xs" />
+  <span>Add Food Item</span>
+</button>
             )}
+
             <Link
               to="/my-orders"
-              className="flex items-center gap-3 px-4 py-2 rounded-xl hover:bg-orange-50 transition"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-orange-50 transition"
             >
-              <FaClipboardList className="text-orange-500 text-xl" />
-              <span className="font-semibold text-gray-700">
+              <FaClipboardList className="text-orange-500 text-base" />
+              <span className="text-sm font-semibold text-gray-700">
                 Pending Orders
               </span>
               <span
-                className={`min-w-[24px] h-6 rounded-full text-xs font-bold flex items-center justify-center text-white ${
+                className={`min-w-[20px] h-5 px-1 rounded-full text-[10px] font-bold flex items-center justify-center text-white ${
                   orderCount > 0 ? "bg-red-500" : "bg-gray-400"
                 }`}
               >
                 {orderCount > 99 ? "99+" : orderCount}
               </span>
             </Link>
-            {/* Profile */}
+
             <div className="relative" ref={profileRef}>
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
-                className="flex items-center gap-2 group"
+                className="flex items-center gap-1.5 px-1.5 py-1 rounded-lg hover:bg-orange-50 transition"
               >
-                <FaUserCircle className="text-[42px] text-gray-600 group-hover:text-orange-500 transition" />
-
+                <FaUserCircle
+                  className={`text-3xl lg:text-[36px] transition ${
+                    profileOpen
+                      ? "text-orange-500"
+                      : "text-gray-600"
+                  }`}
+                />
                 <FaChevronDown
-                  className={`text-xs transition duration-300 ${
-                    profileOpen ? "rotate-180 text-orange-500" : "text-gray-500"
+                  className={`text-[9px] transition-transform duration-200 ${
+                    profileOpen
+                      ? "rotate-180 text-orange-500"
+                      : "text-gray-400"
                   }`}
                 />
               </button>
 
               {profileOpen && (
-                <div className="absolute right-0 mt-3 w-60 rounded-2xl bg-white border border-orange-100 shadow-2xl overflow-hidden animate-in zoom-in fade-in duration-200">
-                  <div className="bg-orange-50 px-5 py-4">
-                    <p className="text-xs text-gray-500">Signed in as</p>
-
-                    <p className="font-semibold text-gray-800 truncate">
+                <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl border border-orange-100 shadow-lg overflow-hidden">
+                  <div className="px-4 py-3 bg-orange-50">
+                    <p className="text-[10px] text-gray-500">
+                      Signed in as
+                    </p>
+                    <p className="text-sm font-semibold text-gray-800 truncate">
                       {userData?.fullName}
                     </p>
                   </div>
@@ -112,92 +118,104 @@ function OwnerNav() {
                   <Link
                     to="/profile"
                     onClick={() => setProfileOpen(false)}
-                    className="block px-5 py-3 hover:bg-orange-50 hover:text-orange-500 transition"
+                    className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition"
                   >
                     My Profile
                   </Link>
 
                   <button
                     onClick={handleLogOut}
-                    className="w-full flex items-center gap-2 px-5 py-3 text-red-500 hover:bg-red-50 transition"
+                    className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition"
                   >
-                    <IoLogOutOutline className="text-lg" />
+                    <IoLogOutOutline className="text-base" />
                     Logout
                   </button>
                 </div>
               )}
             </div>
           </div>
-          {/*MOBILE MENU BUTTON */}
+
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden h-11 w-11 rounded-xl bg-orange-100 flex items-center justify-center"
+            className="md:hidden w-9 h-9 rounded-lg bg-orange-50 flex items-center justify-center border border-orange-100"
           >
             {menuOpen ? (
-              <FaTimes className="text-orange-500 text-xl" />
+              <FaTimes className="text-orange-500 text-base" />
             ) : (
-              <FaBars className="text-orange-500 text-xl" />
+              <FaBars className="text-orange-500 text-base" />
             )}
           </button>
         </div>
       </div>
-      {/* MOBILE MENU */}
+
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ${
-          menuOpen ? "max-h-[450px]" : "max-h-0"
+          menuOpen ? "max-h-[360px]" : "max-h-0"
         }`}
       >
-        <div className="bg-white border-t border-orange-100 px-5 py-5 space-y-4">
+        <div className="border-t border-orange-100 bg-white px-3 sm:px-5 py-3 space-y-2">
+
           {myShopData && (
             <Link
               to="/add-item"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold py-3 shadow-md"
+              className="flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-lg text-sm font-semibold transition"
             >
-              <FaPlus />
+              <FaPlus className="text-xs" />
               Add Food Item
             </Link>
           )}
+
           <Link
             to="/my-orders"
             onClick={() => setMenuOpen(false)}
-            className="flex items-center justify-between rounded-xl border border-orange-100 px-4 py-3 hover:bg-orange-50 transition"
+            className="flex items-center justify-between px-3 py-2.5 rounded-lg border border-gray-100 hover:bg-orange-50 transition"
           >
-            <div className="flex items-center gap-3">
-              <FaClipboardList className="text-orange-500" />
-              <span className="font-medium text-gray-700">Pending Orders</span>
+            <div className="flex items-center gap-2.5">
+              <FaClipboardList className="text-orange-500 text-sm" />
+              <span className="text-sm font-medium text-gray-700">
+                Pending Orders
+              </span>
             </div>
+
             <span
-              className={`min-w-[26px] h-6 rounded-full flex items-center justify-center text-xs font-bold text-white ${
+              className={`min-w-[21px] h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white ${
                 orderCount > 0 ? "bg-red-500" : "bg-gray-400"
               }`}
             >
               {orderCount}
             </span>
           </Link>
-          <div className="rounded-xl border border-orange-100 overflow-hidden">
+
+          <div className="rounded-lg border border-gray-100 overflow-hidden">
+
             <button
               onClick={() => setProfileOpen(!profileOpen)}
-              className="w-full flex items-center justify-between px-4 py-3"
+              className="w-full flex items-center justify-between px-3 py-2.5"
             >
-              <div className="flex items-center gap-3">
-                <FaUserCircle className="text-4xl text-gray-600" />
-                <div className="text-left">
-                  <p className="text-xs text-gray-500">Signed in as</p>
-                  <p className="font-semibold text-gray-800">
+              <div className="flex items-center gap-2.5">
+                <FaUserCircle className="text-3xl text-gray-600" />
+
+                <div className="text-left min-w-0">
+                  <p className="text-[10px] text-gray-500">
+                    Signed in as
+                  </p>
+                  <p className="text-sm font-semibold text-gray-800 truncate max-w-[190px]">
                     {userData?.fullName}
                   </p>
                 </div>
               </div>
+
               <FaChevronDown
-                className={`transition duration-300 ${
-                  profileOpen && "rotate-180"
+                className={`text-xs text-gray-400 transition-transform duration-200 ${
+                  profileOpen ? "rotate-180 text-orange-500" : ""
                 }`}
               />
             </button>
+
             <div
               className={`overflow-hidden transition-all duration-300 ${
-                profileOpen ? "max-h-40" : "max-h-0"
+                profileOpen ? "max-h-24" : "max-h-0"
               }`}
             >
               <Link
@@ -206,19 +224,20 @@ function OwnerNav() {
                   setMenuOpen(false);
                   setProfileOpen(false);
                 }}
-                className="block px-5 py-3 hover:bg-orange-50 hover:text-orange-500 transition"
+                className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition"
               >
                 My Profile
               </Link>
+
               <button
                 onClick={() => {
                   handleLogOut();
                   setMenuOpen(false);
                   setProfileOpen(false);
                 }}
-                className="w-full flex items-center gap-2 px-5 py-3 text-red-500 hover:bg-red-50 transition"
+                className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition"
               >
-                <IoLogOutOutline className="text-lg" />
+                <IoLogOutOutline className="text-base" />
                 Logout
               </button>
             </div>

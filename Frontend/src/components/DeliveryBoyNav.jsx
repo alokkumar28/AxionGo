@@ -14,11 +14,10 @@ function DeliveryBoyNav() {
   const [profileOpen, setProfileOpen] = React.useState(false);
   const { userData } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+
   const handleLogOut = async () => {
     try {
-      await axios.get(`${serverUrl}/api/auth/signout`, {
-        withCredentials: true,
-      });
+      await axios.get(`${serverUrl}/api/auth/signout`, { withCredentials: true });
       dispatch(setUserData(null));
       navigate("/signin");
     } catch (error) {
@@ -27,132 +26,71 @@ function DeliveryBoyNav() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-orange-100 bg-white/90 backdrop-blur-xl shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <Link to="/" className="flex items-center gap-2 flex-shrink-0 group">
-            <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-md group-hover:scale-105 transition-all duration-300">
-              <GiKnifeFork className="text-white text-xl" />
+    <nav className="sticky top-0 z-[1000] w-full bg-white border-b border-orange-100 shadow-sm">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+        <div className="h-14 sm:h-16 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2 shrink-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-orange-500 flex items-center justify-center shadow-sm">
+              <GiKnifeFork className="text-white text-base sm:text-lg" />
             </div>
-            <h1 className="text-2xl font-extrabold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent tracking-tight">
-              AxionGo
-            </h1>
+            <span className="text-xl sm:text-2xl font-extrabold text-orange-500 tracking-tight">AxionGo</span>
           </Link>
-          <div className="hidden md:flex items-center gap-6">
-            <Link
-              to="/my-orders"
-              className="font-medium text-gray-700 hover:text-orange-500 transition"
-            >
-              My Orders
-            </Link>
+
+          <div className="hidden md:flex items-center gap-5 lg:gap-7">
+            <Link to="/my-orders" className="text-sm lg:text-base font-semibold text-gray-700 hover:text-orange-500 transition">My Orders</Link>
+
             <div className="relative">
-              <button
-                onClick={() => setProfileOpen(!profileOpen)}
-                className="flex items-center gap-2 group"
-              >
-                <FaUserCircle className="text-[42px] text-gray-600 group-hover:text-orange-500 transition" />
-                <FaChevronDown
-                  className={`text-xs text-gray-500 transition-transform duration-300 ${
-                    profileOpen ? "rotate-180" : ""
-                  }`}
-                />
+              <button onClick={() => setProfileOpen(!profileOpen)} className="flex items-center gap-1.5 p-1 rounded-xl hover:bg-orange-50 transition">
+                <FaUserCircle className="text-[32px] lg:text-[36px] text-gray-500 hover:text-orange-500 transition" />
+                <FaChevronDown className={`text-[9px] text-gray-500 transition-transform duration-200 ${profileOpen ? "rotate-180" : ""}`} />
               </button>
+
               {profileOpen && (
-                <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl border border-orange-100 overflow-hidden">
-                  <div className="px-5 py-4 bg-orange-50">
-                    <p className="text-xs text-gray-500">Signed in as</p>
-                    <p className="font-semibold text-gray-800 truncate">
-                      {userData?.fullName}
-                    </p>
+                <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
+                  <div className="px-4 py-3 bg-orange-50 border-b border-orange-100">
+                    <p className="text-[10px] text-gray-500">Signed in as</p>
+                    <p className="text-sm font-semibold text-gray-800 truncate mt-0.5">{userData?.fullName}</p>
                   </div>
-                  <Link
-                    to="/profile"
-                    onClick={() => setProfileOpen(false)}
-                    className="block px-5 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition"
-                  >
-                    My Profile
-                  </Link>
-                  <button
-                    onClick={handleLogOut}
-                    className="w-full flex items-center gap-2 px-5 py-3 text-red-500 hover:bg-red-50 transition"
-                  >
-                    <IoLogOutOutline className="text-lg" />
+
+                  <Link to="/profile" onClick={() => setProfileOpen(false)} className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition">My Profile</Link>
+
+                  <button onClick={handleLogOut} className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition">
+                    <IoLogOutOutline className="text-base" />
                     Logout
                   </button>
                 </div>
               )}
             </div>
           </div>
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden h-11 w-11 rounded-lg bg-orange-100 flex items-center justify-center"
-          >
-            {menuOpen ? (
-              <FaTimes className="text-orange-500 text-xl" />
-            ) : (
-              <FaBars className="text-orange-500 text-xl" />
-            )}
+
+          <button onClick={() => { setMenuOpen(!menuOpen); setProfileOpen(false); }} className="md:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center transition hover:bg-orange-100">
+            {menuOpen ? <FaTimes className="text-orange-500 text-lg" /> : <FaBars className="text-orange-500 text-lg" />}
           </button>
         </div>
       </div>
-      <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ${
-          menuOpen ? "max-h-[400px]" : "max-h-0"
-        }`}
-      >
-        <div className="px-5 pb-6 border-t border-orange-100 bg-white">
-          <Link
-            to="/my-orders"
-            onClick={() => setMenuOpen(false)}
-            className="flex items-center justify-between py-4 border-b border-orange-100 text-gray-700 font-medium hover:text-orange-500"
-          >
-            My Orders
-          </Link>
-          <div className="py-4">
-            <button
-              onClick={() => setProfileOpen(!profileOpen)}
-              className="w-full flex items-center justify-between"
-            >
-              <div className="flex items-center gap-3">
-                <FaUserCircle className="text-[42px] text-gray-600" />
-                <div className="text-left">
-                  <p className="text-xs text-gray-500">Signed in as</p>
-                  <p className="font-semibold text-gray-800">
-                    {userData?.fullName}
-                  </p>
+
+      <div className={`md:hidden overflow-hidden transition-all duration-200 border-t border-orange-100 ${menuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0 border-t-0"}`}>
+        <div className="px-3 sm:px-4 py-2.5 bg-white">
+          <Link to="/my-orders" onClick={() => setMenuOpen(false)} className="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition">My Orders</Link>
+
+          <div className="mt-1">
+            <button onClick={() => setProfileOpen(!profileOpen)} className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-orange-50 transition">
+              <div className="flex items-center gap-2.5">
+                <FaUserCircle className="text-[30px] text-gray-500" />
+                <div className="text-left min-w-0">
+                  <p className="text-[10px] text-gray-500">Signed in as</p>
+                  <p className="text-sm font-semibold text-gray-800 truncate max-w-[180px]">{userData?.fullName}</p>
                 </div>
               </div>
-              <FaChevronDown
-                className={`text-gray-500 transition-transform duration-300 ${
-                  profileOpen ? "rotate-180" : ""
-                }`}
-              />
+              <FaChevronDown className={`text-[10px] text-gray-500 transition-transform duration-200 ${profileOpen ? "rotate-180" : ""}`} />
             </button>
-            <div
-              className={`overflow-hidden transition-all duration-300 ${
-                profileOpen ? "max-h-40 mt-4" : "max-h-0"
-              }`}
-            >
-              <div className="rounded-xl border border-orange-100 bg-white shadow-sm">
-                <Link
-                  to="/profile"
-                  onClick={() => {
-                    setProfileOpen(false);
-                    setMenuOpen(false);
-                  }}
-                  className="block px-5 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition"
-                >
-                  My Profile
-                </Link>
-                <button
-                  className="w-full flex items-center gap-2 px-5 py-3 text-red-500 hover:bg-red-50 transition"
-                  onClick={() => {
-                    handleLogOut();
-                    setProfileOpen(false);
-                    setMenuOpen(false);
-                  }}
-                >
-                  <IoLogOutOutline className="text-lg" />
+
+            <div className={`overflow-hidden transition-all duration-200 ${profileOpen ? "max-h-28 opacity-100 mt-1" : "max-h-0 opacity-0"}`}>
+              <div className="ml-3 border-l-2 border-orange-100 pl-2">
+                <Link to="/profile" onClick={() => { setProfileOpen(false); setMenuOpen(false); }} className="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition">My Profile</Link>
+
+                <button onClick={() => { handleLogOut(); setProfileOpen(false); setMenuOpen(false); }} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 transition">
+                  <IoLogOutOutline className="text-base" />
                   Logout
                 </button>
               </div>
