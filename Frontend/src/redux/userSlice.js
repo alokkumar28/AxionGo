@@ -10,7 +10,7 @@ export const userSlice = createSlice({
     itemsInMyCity: [],
     cartItems: [],
     totalAmount: 0,
-    myOrders:[],
+    myOrders: [],
   },
   reducers: {
     setUserData: (state, action) => {
@@ -63,21 +63,33 @@ export const userSlice = createSlice({
         0,
       );
     },
-    setMyOrders:(state , action)=>{
-      state.myOrders = action.payload
+    setMyOrders: (state, action) => {
+      state.myOrders = action.payload;
     },
-    addMyOrder:(state , action)=>{
-      state.myOrders = [action.payload,...state.myOrders]
+    addMyOrder: (state, action) => {
+      state.myOrders = [action.payload, ...state.myOrders];
     },
     updateOrderStatus: (state, action) => {
-  const { orderId, status } = action.payload;
+      const { orderId, status } = action.payload;
 
-  const order = state.myOrders.find((o) => o._id === orderId);
+      const order = state.myOrders.find((o) => o._id === orderId);
 
-  if (!order) return;
+      if (!order) return;
 
-  order.shopOrder.status = status;
-},
+      order.shopOrder.status = status;
+    },
+    updateRealTimeOrderStatus: (state, action) => {
+      const { orderId, shopId, status } = action.payload;
+      const order = state.myOrders.find((o) => o._id === orderId);
+      if (order) {
+        const shopOrder = order.shopOrders.find(
+          (so) => so.shop?._id === shopId
+        );
+        if (shopOrder) {
+          shopOrder.status = status;
+        }
+      }
+    },
   },
 });
 
@@ -93,6 +105,7 @@ export const {
   updateQuantity,
   setMyOrders,
   addMyOrder,
-  updateOrderStatus
+  updateOrderStatus,
+  updateRealTimeOrderStatus
 } = userSlice.actions;
 export default userSlice.reducer;

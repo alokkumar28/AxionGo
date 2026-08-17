@@ -67,7 +67,10 @@ export const placeOrder = async (req, res) => {
           message: `Invalid quantity for ${item.name || "item"}`,
         });
       }
-      const shopId = typeof item.shop === "object" ? item.shop._id?.toString() : item.shop.toString();
+      const shopId =
+        typeof item.shop === "object"
+          ? item.shop._id?.toString()
+          : item.shop.toString();
       if (!shopId) {
         return res.status(400).json({
           success: false,
@@ -90,9 +93,8 @@ export const placeOrder = async (req, res) => {
         }
         const items = groupItemsByShop[shopId];
         const subTotal = items.reduce(
-          (total, item) =>
-            total + Number(item.price) * Number(item.quantity),
-          0
+          (total, item) => total + Number(item.price) * Number(item.quantity),
+          0,
         );
         return {
           shop: shop._id,
@@ -105,7 +107,7 @@ export const placeOrder = async (req, res) => {
             quantity: Number(item.quantity),
           })),
         };
-      })
+      }),
     );
 
     if (paymentMethod === "Online Payment") {
@@ -125,12 +127,9 @@ export const placeOrder = async (req, res) => {
       });
       await newOrder.populate(
         "shopOrders.shopOrderItems.item",
-        "name image price"
+        "name image price",
       );
-      await newOrder.populate(
-        "shopOrders.shop",
-        "name"
-      );
+      await newOrder.populate("shopOrders.shop", "name");
       return res.status(201).json({
         success: true,
         message: "Order created. Complete payment.",
@@ -138,6 +137,7 @@ export const placeOrder = async (req, res) => {
         razorpayOrder,
       });
     }
+
     if (paymentMethod === "Cash on Delivery") {
       const newOrder = await Order.create({
         user: req.userId,
@@ -149,12 +149,37 @@ export const placeOrder = async (req, res) => {
       });
       await newOrder.populate(
         "shopOrders.shopOrderItems.item",
-        "name image price"
+        "name image price",
       );
-      await newOrder.populate(
-        "shopOrders.shop",
-        "name"
-      );
+      await newOrder.populate("shopOrders.shop", "name");
+      await newOrder.populate("shopOrders.owner", "name socketId");
+      await newOrder.populate("user", "name email mobile");
+      const io = req.app.get("io");
+
+      if (io) {
+        newOrder.shopOrders.forEach((shopOrder) => {
+          const ownerSocketId = shopOrder.owner?.socketId;
+          if (ownerSocketId) {
+            io.to(ownerSocketId).emit("newOrder", {
+              _id: newOrder._id,
+              paymentMethod: newOrder.paymentMethod,
+              user: newOrder.user,
+              shopOrder: shopOrder,
+              deliveryAddress: newOrder.deliveryAddress,
+              totalAmount: newOrder.totalAmount,
+              createdAt: newOrder.createdAt,
+            });
+            console.log(
+              `New order sent to owner ${shopOrder.owner._id} through socket ${ownerSocketId}`,
+            );
+          } else {
+            console.log(
+              `Owner ${shopOrder.owner._id} is offline. Order notification not sent through socket.`,
+            );
+          }
+        });
+      }
+
       return res.status(201).json({
         success: true,
         message: "Order placed successfully",
@@ -176,19 +201,14 @@ export const placeOrder = async (req, res) => {
 
 export const verifyOnlinePayment = async (req, res) => {
   try {
-    const {
-      razorpay_payment_id,
-      orderId,
-    } = req.body;
+    const { razorpay_payment_id, orderId } = req.body;
     if (!razorpay_payment_id || !orderId) {
       return res.status(400).json({
         success: false,
         message: "Payment ID and Order ID are required",
       });
     }
-    const payment = await instance.payments.fetch(
-      razorpay_payment_id
-    );
+    const payment = await instance.payments.fetch(razorpay_payment_id);
     if (!payment) {
       return res.status(400).json({
         success: false,
@@ -224,18 +244,13 @@ export const verifyOnlinePayment = async (req, res) => {
         order,
       });
     }
-    if (
-      order.razorpayOrderId &&
-      payment.order_id !== order.razorpayOrderId
-    ) {
+    if (order.razorpayOrderId && payment.order_id !== order.razorpayOrderId) {
       return res.status(400).json({
         success: false,
         message: "Payment does not belong to this order",
       });
     }
-    const expectedAmount = Math.round(
-      Number(order.totalAmount) * 100
-    );
+    const expectedAmount = Math.round(Number(order.totalAmount) * 100);
     if (Number(payment.amount) !== expectedAmount) {
       return res.status(400).json({
         success: false,
@@ -253,6 +268,39 @@ export const verifyOnlinePayment = async (req, res) => {
       "shopOrders.shop",
       "name"
     );
+    await order.populate(
+      "shopOrders.owner",
+      "name socketId"
+    );
+    await order.populate(
+      "user",
+      "fullName email mobile"
+    );
+
+    const io = req.app.get("io");
+    if (io) {
+      order.shopOrders.forEach((shopOrder) => {
+        const ownerSocketId = shopOrder.owner?.socketId;
+        if (ownerSocketId) {
+          io.to(ownerSocketId).emit("newOrder", {
+            _id: order._id,
+            paymentMethod: order.paymentMethod,
+            user: order.user,
+            shopOrder: shopOrder,
+            deliveryAddress: order.deliveryAddress,
+            totalAmount: order.totalAmount,
+            createdAt: order.createdAt,
+          });
+          console.log(
+            `Online payment order sent to owner ${shopOrder.owner._id} through socket ${ownerSocketId}`
+          );
+        } else {
+          console.log(
+            `Owner ${shopOrder.owner?._id} is offline. Online order notification not sent through socket.`
+          );
+        }
+      });
+    }
     return res.status(200).json({
       success: true,
       message: "Payment verified successfully",
@@ -262,8 +310,7 @@ export const verifyOnlinePayment = async (req, res) => {
     console.error("VERIFY PAYMENT ERROR:", error);
     return res.status(500).json({
       success: false,
-      message:
-        error.message || "Payment verification failed",
+      message: error.message || "Payment verification failed",
     });
   }
 };
@@ -352,6 +399,7 @@ export const updateOrderStatus = async (req, res) => {
       const { longitude, latitude } = order.deliveryAddress;
       const nearByDeliveryBoys = await User.find({
         role: "Delivery Boy",
+        isOnline: true,
         location: {
           $near: {
             $geometry: {
@@ -361,7 +409,7 @@ export const updateOrderStatus = async (req, res) => {
             $maxDistance: 5000,
           },
         },
-      });
+      }).select("fullName mobile socketId location");
       const nearByIds = nearByDeliveryBoys.map((b) => b._id);
       const busyIds = await DeliveryAssignment.find({
         assignedTo: { $in: nearByIds },
@@ -390,6 +438,31 @@ export const updateOrderStatus = async (req, res) => {
         broadCastedTo: candidates,
         status: "Broadcasted",
       });
+
+      const shop = await Shop.findById(shopOrder.shop).select("name");
+
+      const io = req.app.get("io");
+
+      if (io) {
+        availableBoys.forEach((boy) => {
+          if (boy.socketId) {
+            io.to(boy.socketId).emit("newDeliveryRequest", {
+              assignmentId: deliveryAssignment._id,
+              orderId: order._id,
+              shopName: shop?.name,
+              deliveryAddress: order.deliveryAddress,
+              items: shopOrder.shopOrderItems,
+              subTotal: shopOrder.subTotalAmount,
+            });
+
+            console.log(
+              `Delivery request sent to ${boy.fullName} - ${boy.socketId}`
+            );
+          }
+        });
+      }
+
+
       shopOrder.assignedDeliveryBoy = deliveryAssignment?.assignedTo; //CHECK
       shopOrder.assignment = deliveryAssignment._id;
       deliveryBoysPayload = availableBoys.map((b) => ({
@@ -401,6 +474,28 @@ export const updateOrderStatus = async (req, res) => {
       }));
     }
     await order.save();
+    await order.populate(
+      "user",
+      "fullName email mobile socketId"
+    );
+    const customerSocketId = order.user?.socketId;
+    const io = req.app.get("io");
+    if (io && customerSocketId) {
+      io.to(customerSocketId).emit("orderStatusUpdated", {
+        orderId: order._id,
+        shopId: shopOrder.shop,
+        status: shopOrder.status,
+        shopOrderId: shopOrder._id,
+        userId:order.user._id
+      });
+      console.log(
+        `Order status "${shopOrder.status}" sent to customer ${order.user._id} through socket ${customerSocketId}`
+      );
+    } else {
+      console.log(
+        `Customer ${order.user?._id} is offline. Status update not sent through socket.`
+      );
+    }
     const updatedShopOrder = order.shopOrders.find(
       (o) => o.shop.toString() === shopId,
     );

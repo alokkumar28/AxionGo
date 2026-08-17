@@ -2,16 +2,19 @@ import React, { useEffect, useState } from "react";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { FaStore, FaMapMarkerAlt, FaBoxOpen, FaCheckCircle } from "react-icons/fa";
 import DeliveryBoyNav from "./DeliveryBoyNav";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { serverUrl } from "../App";
 import DeliveryBoyTracking from "./DeliveryBoyTracking";
+import { useSocket } from "../context/SocketContext";
 
 function DeliveryBoy() {
   const { userData } = useSelector((state) => state.user);
   const [availableAssignments, setAvailableAssignments] = useState([]);
   const [currentOrder, setCurrentOrder] = useState(null);
   const [showOtpBox, setShowOtpBox] = useState(false);
+  const socket = useSocket();
+  const dispatch = useDispatch();
 
   const getAssignments = async () => {
     try {
@@ -44,6 +47,26 @@ function DeliveryBoy() {
       console.log("GET CURRENT ORDER ERROR:", error.response?.data?.message || error.message);
     }
   };
+
+  useEffect(() => {
+    if (!socket || userData?.role !== "Delivery Boy") return;
+    const handleNewDeliveryRequest = (data) => {
+      console.log("NEW DELIVERY REQUEST:", data);
+      setAvailableAssignments((prev) => {
+        const exists = prev.some(
+          (assignment) =>
+            assignment.assignmentId?.toString() ===
+            data.assignmentId?.toString()
+        );
+        if (exists) return prev;
+        return [data, ...prev];
+      });
+    };
+    socket.on("newDeliveryRequest", handleNewDeliveryRequest);
+    return () => {
+      socket.off("newDeliveryRequest", handleNewDeliveryRequest);
+    };
+  }, [socket, userData?.role]);
 
   useEffect(() => {
     if (userData?.role === "Delivery Boy") {

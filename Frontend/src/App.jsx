@@ -4,7 +4,7 @@ import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import ForgotPassword from './pages/ForgotPassword';
 import useGetCurrentUser from './hooks/useGetCurrentUser';
-import { useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import Home from './pages/Home';
 import useGetCity from './hooks/useGetCity';
 import useGetMyShop from './hooks/useGetMyShop';
@@ -23,6 +23,7 @@ import TrackOrderPage from './pages/TrackOrderPage';
 import ShopMenuPage from './pages/ShopMenuPage';
 export const serverUrl="http://localhost:8000"
 function App() {
+  const {userData} = useSelector(state=>state.user)
   useGetCurrentUser();
   useGetCity()
   useGetMyShop();
@@ -31,7 +32,6 @@ function App() {
   useGetMyOrders();
   useUpdateLocation();
 
-  const {userData} = useSelector(state=>state.user)
   return (
     <Routes>
       <Route path="/" element={userData?<Home/>:<Navigate to={"/signin"}/>} />

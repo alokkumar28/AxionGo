@@ -1,17 +1,59 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaBoxOpen, FaClipboardList } from "react-icons/fa";
 import { GiKnifeFork } from "react-icons/gi";
 import UserMyOrderCard from "../components/UserMyOrderCard";
 import OwnerMyOrderCard from "../components/OwnerMyOrderCard";
 import useGetMyOrders from "../hooks/useGetMyOrders";
+import { useSocket } from "../context/SocketContext";
+import { addMyOrder, updateRealTimeOrderStatus } from "../redux/userSlice";
+import { useEffect } from "react";
 
 function MyOrders() {
   useGetMyOrders();
   const { userData, myOrders } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const socket = useSocket();
 
+  useEffect(() => {
+    if (!socket || !userData?._id) return;
+    if (userData.role !== "Owner") return;
+    const handleNewOrder = (data) => {
+      console.log("NEW ORDER RECEIVED:", data);
+      const ownerId = data.shopOrder?.owner?._id?.toString();
+      const currentUserId = userData._id?.toString();
+      if (ownerId !== currentUserId) {
+        return;
+      }
+      dispatch(addMyOrder(data));
+    };
+    socket.on("newOrder", handleNewOrder);
+    return () => {
+      socket.off("newOrder", handleNewOrder);
+    };
+  }, [socket, userData?._id, userData?.role, dispatch]);
+  
+  useEffect(() => {
+    if (!socket) return;
+    const handleOrderStatusUpdated = (data) => {
+      console.log("ORDER STATUS UPDATED:", data);
+      if (data.userId?.toString() === userData?._id?.toString()) {
+        dispatch(
+          updateRealTimeOrderStatus({
+            orderId: data.orderId,
+            shopId: data.shopId,
+            status: data.status,
+          })
+        );
+      }
+    };
+    socket.on("orderStatusUpdated", handleOrderStatusUpdated);
+    return () => {
+      socket.off("orderStatusUpdated", handleOrderStatusUpdated);
+    };
+  }, [socket, userData?._id, dispatch]);
+ 
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="sticky top-0 z-40 bg-white border-b border-gray-200">
@@ -22,7 +64,6 @@ function MyOrders() {
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-orange-500">AxionGo</h1>
           </button>
-
           <button onClick={() => navigate("/")} className="flex items-center gap-1.5 border border-orange-200 text-orange-500 hover:bg-orange-50 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition shrink-0">
             <FaArrowLeft className="text-xs" />
             <span className="hidden sm:block">Back</span>
@@ -36,7 +77,6 @@ function MyOrders() {
             <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-orange-100 flex items-center justify-center shrink-0">
               {userData?.role === "User" ? <FaClipboardList className="text-orange-500 text-lg sm:text-xl" /> : <FaBoxOpen className="text-orange-500 text-lg sm:text-xl" />}
             </div>
-
             <div className="min-w-0">
               <h2 className="text-2xl sm:text-3xl font-bold text-[#172b4d] leading-tight">{userData?.role === "User" ? "My Orders" : "Pending Orders"}</h2>
               <p className="text-xs sm:text-sm text-gray-500 mt-1 leading-5 max-w-3xl">{userData?.role === "User" ? "View your order history, payment details and track every order placed through AxionGo." : "Manage incoming customer orders and keep every order moving smoothly."}</p>
