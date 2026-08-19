@@ -22,7 +22,7 @@ import useUpdateLocation from './hooks/useUpdateLocation';
 import TrackOrderPage from './pages/TrackOrderPage';
 import ShopMenuPage from './pages/ShopMenuPage';
 import TodayDeliveries from './components/TodayDeliveries';
-export const serverUrl="http://localhost:8000"
+export const serverUrl="https://axiongo.onrender.com"
 function App() {
   const {userData} = useSelector(state=>state.user)
   useGetCurrentUser();
