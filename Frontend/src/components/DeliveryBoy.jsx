@@ -7,12 +7,14 @@ import axios from "axios";
 import {serverUrl} from "../App";
 import DeliveryBoyTracking from "./DeliveryBoyTracking";
 import {useSocket} from "../context/SocketContext";
+import { useNavigate } from "react-router-dom";
 
 function DeliveryBoy(){
   const {userData}=useSelector((state)=>state.user);
   const [availableAssignments,setAvailableAssignments]=useState([]);
   const [currentOrder,setCurrentOrder]=useState(null);
   const [currentLocation,setCurrentLocation]=useState({latitude:null,longitude:null});
+  const navigate = useNavigate();
   const socket=useSocket();
   const dispatch=useDispatch();
 
@@ -47,6 +49,18 @@ function DeliveryBoy(){
       console.log("GET CURRENT ORDER ERROR:",error.response?.data?.message||error.message);
     }
   };
+
+  const handleDeliveryComplete = async () => {
+    setCurrentOrder(null);
+
+    setCurrentLocation({
+      latitude: null,
+      longitude: null,
+    });
+
+    await getAssignments();
+  };
+
 
   useEffect(()=>{
     if(!socket||!userData?._id||userData.role!=="Delivery Boy"){
@@ -153,6 +167,12 @@ function DeliveryBoy(){
             <div className="mt-4 sm:mt-5 bg-orange-50 border border-orange-100 rounded-xl px-3 py-3 sm:px-4 sm:py-3.5">
               <p className="text-xs sm:text-sm text-[#172b4d] leading-5">Your current location helps AxionGo find nearby delivery orders and assign them to you.</p>
             </div>
+            <button
+              onClick={() => navigate("/today-deliveries")}
+              className="mt-3 w-full bg-white border border-orange-200 text-orange-600 hover:bg-orange-50 font-semibold text-xs sm:text-sm py-2.5 sm:py-3 rounded-xl transition"
+            >
+              View Today's Deliveries
+            </button>
 
             <div className="grid grid-cols-2 gap-2 sm:gap-3 mt-3">
               <div className="border border-gray-200 rounded-xl px-3 py-3 sm:px-4 sm:py-3.5">
@@ -179,7 +199,7 @@ function DeliveryBoy(){
 
         {currentOrder?(
           <div className="mt-5 sm:mt-6 lg:mt-7">
-            <DeliveryBoyTracking currentOrder={currentOrder} currentLocation={currentLocation}/>
+            <DeliveryBoyTracking currentOrder={currentOrder} currentLocation={currentLocation}  onDeliveryComplete={handleDeliveryComplete}/>
           </div>
         ):(
           <section className="mt-6 sm:mt-7 lg:mt-8">

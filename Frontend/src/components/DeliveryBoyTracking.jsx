@@ -30,8 +30,8 @@ const customerIcon=L.divIcon({
   iconAnchor:[19,19],
   popupAnchor:[0,-20],
 });
-
-function FitMapToLocations({deliveryBoyLocation,customerLocation}){
+  
+function FitMapToLocations({deliveryBoyLocation,customerLocation }){
   const map=useMap();
   const timeoutRef=React.useRef(null);
   const isAutoFittingRef=React.useRef(false);
@@ -78,7 +78,7 @@ function FitMapToLocations({deliveryBoyLocation,customerLocation}){
   return null;
 }
 
-function DeliveryBoyTracking({currentOrder,currentLocation}){
+function DeliveryBoyTracking({currentOrder,currentLocation , onDeliveryComplete}){
   const [showOtpBox,setShowOtpBox]=useState(false);
   const [otp,setOtp]=useState("");
   const [sendingOtp,setSendingOtp]=useState(false);

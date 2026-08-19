@@ -291,3 +291,54 @@ export const searchItems = async (req, res) => {
     });
   }
 };
+export const rating = async (req, res) => {
+  try {
+    const { itemId, rating } = req.body;
+    if (!itemId || rating === undefined || rating === null) {
+      return res.status(400).json({
+        success: false,
+        message: "Item ID and rating are required",
+      });
+    }
+    const numericRating = Number(rating);
+    if (
+      !Number.isFinite(numericRating) ||
+      numericRating < 1 ||
+      numericRating > 5
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Rating must be between 1 and 5",
+      });
+    }
+    const item = await Item.findById(itemId);
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: "Item not found",
+      });
+    }
+    const oldCount = item.rating.count || 0;
+    const oldAverage = item.rating.average || 0;
+    const newCount = oldCount + 1;
+    const newAverage =(oldAverage * oldCount + numericRating) / newCount;
+    item.rating.count = newCount;
+    item.rating.average = Number(newAverage.toFixed(1));
+    await item.save();
+    return res.status(200).json({
+      success: true,
+      message: "Rating submitted successfully",
+      rating: {
+        average: item.rating.average,
+        count: item.rating.count,
+      },
+    });
+  } catch (error) {
+    console.error("RATING ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to submit rating",
+      error: error.message,
+    });
+  }
+};

@@ -438,11 +438,8 @@ export const updateOrderStatus = async (req, res) => {
         broadCastedTo: candidates,
         status: "Broadcasted",
       });
-
       const shop = await Shop.findById(shopOrder.shop).select("name");
-
       const io = req.app.get("io");
-
       if (io) {
         availableBoys.forEach((boy) => {
           if (boy.socketId) {
@@ -454,15 +451,12 @@ export const updateOrderStatus = async (req, res) => {
               items: shopOrder.shopOrderItems,
               subTotal: shopOrder.subTotalAmount,
             });
-
             console.log(
               `Delivery request sent to ${boy.fullName} - ${boy.socketId}`
             );
           }
         });
       }
-
-
       shopOrder.assignedDeliveryBoy = deliveryAssignment?.assignedTo; //CHECK
       shopOrder.assignment = deliveryAssignment._id;
       deliveryBoysPayload = availableBoys.map((b) => ({
@@ -864,5 +858,52 @@ export const verifyDeliveryOtp = async (req, res) => {
       message: "Failed to verify delivery OTP.",
       error: error.message,
     });
+  }
+};
+
+export const getTodayDeliveries=async(req,res)=>{
+  try{
+    const deliveryBoyId=req.userId;
+    const startsOfDay=new Date();
+    startsOfDay.setHours(0,0,0,0);
+
+    const orders=await Order.find({"shopOrders.assignedDeliveryBoy":deliveryBoyId,"shopOrders.status":"Delivered","shopOrders.deliveredAt":{$gte:startsOfDay}}).lean();
+
+    const todaysDeliveries=[];
+    orders.forEach(order=>{
+      order.shopOrders.forEach(shopOrder=>{
+        if(String(shopOrder.assignedDeliveryBoy)===String(deliveryBoyId)&&shopOrder.status==="Delivered"&&shopOrder.deliveredAt&&new Date(shopOrder.deliveredAt)>=startsOfDay){
+          todaysDeliveries.push({...shopOrder,orderId:order._id});
+        }
+      });
+    });
+
+    const DELIVERY_EARNING=25;
+    const totalDeliveries=todaysDeliveries.length;
+    const totalEarning=totalDeliveries*DELIVERY_EARNING;
+    const averageEarning=totalDeliveries>0?totalEarning/totalDeliveries:0;
+
+    const stats={};
+    todaysDeliveries.forEach(shopOrder=>{
+      const hour=new Date(shopOrder.deliveredAt).getHours();
+      stats[hour]=(stats[hour]||0)+1;
+    });
+
+    const formattedStats=Object.keys(stats).map(hour=>({hour:Number(hour),count:stats[hour]})).sort((a,b)=>a.hour-b.hour);
+
+    return res.status(200).json({
+      success:true,
+      deliveries:totalDeliveries,
+      orders:todaysDeliveries,
+      stats:formattedStats,
+      earnings:{
+        perDelivery:DELIVERY_EARNING,
+        total:totalEarning,
+        average:averageEarning
+      }
+    });
+  }catch(error){
+    console.error("GET TODAY DELIVERIES ERROR:",error);
+    return res.status(500).json({success:false,message:"Failed to get today's deliveries",error:error.message});
   }
 };

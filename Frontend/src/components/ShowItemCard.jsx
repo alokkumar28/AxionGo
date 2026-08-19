@@ -12,9 +12,23 @@ function ShowItemCard({ item }) {
 
   const renderRatingStars = () => {
     const stars = [];
-    const rating = Math.round(item.rating?.average || 0);
+    const rating = Math.round(Number(item.rating?.average) || 0);
     for (let i = 1; i <= 5; i++) {
-      stars.push(i <= rating ? <FaStar key={i} className="text-yellow-400 text-[9px] sm:text-[10px]" /> : <FaRegStar key={i} className="text-yellow-400 text-[9px] sm:text-[10px]" />);
+      if (i <= rating) {
+        stars.push(
+          <FaStar
+            key={i}
+            className="text-yellow-400 text-[9px] sm:text-[10px]"
+          />
+        );
+      } else {
+        stars.push(
+          <FaRegStar
+            key={i}
+            className="text-gray-300 text-[9px] sm:text-[10px]"
+          />
+        );
+      }
     }
     return stars;
   };

@@ -1,6 +1,6 @@
 import express from "express"
 import isAuth from "../middlewares/isAuth.js";
-import { acceptOrder, getCurrentOrder, getDeliveryBoyAssignment, getMyOrders,getOrderById,placeOrder, sendDeliveryOtp, updateOrderStatus, verifyDeliveryOtp, verifyOnlinePayment } from "../controllers/order.controller.js";
+import { acceptOrder, getCurrentOrder, getDeliveryBoyAssignment, getMyOrders,getOrderById,getTodayDeliveries,placeOrder, sendDeliveryOtp, updateOrderStatus, verifyDeliveryOtp, verifyOnlinePayment } from "../controllers/order.controller.js";
 
 
 const orderRouter = express.Router()
@@ -10,6 +10,7 @@ orderRouter.post("/verify-payment" , isAuth , verifyOnlinePayment)
 orderRouter.get("/my-orders" , isAuth , getMyOrders)
 orderRouter.get("/get-assignments" , isAuth , getDeliveryBoyAssignment)
 orderRouter.get("/get-current-order" , isAuth , getCurrentOrder)
+orderRouter.get("/get-today-deliveries" , isAuth , getTodayDeliveries)
 orderRouter.post("/send-delivery-otp" , isAuth , sendDeliveryOtp)
 orderRouter.post("/verify-delivery-otp" , isAuth , verifyDeliveryOtp)
 orderRouter.get("/get-order-by-id/:orderId" , isAuth , getOrderById)

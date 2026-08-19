@@ -21,6 +21,7 @@ import useGetMyOrders from './hooks/useGetMyOrders';
 import useUpdateLocation from './hooks/useUpdateLocation';
 import TrackOrderPage from './pages/TrackOrderPage';
 import ShopMenuPage from './pages/ShopMenuPage';
+import TodayDeliveries from './components/TodayDeliveries';
 export const serverUrl="http://localhost:8000"
 function App() {
   const {userData} = useSelector(state=>state.user)
@@ -47,6 +48,7 @@ function App() {
       <Route path="/my-orders" element={userData?<MyOrders/>:<Navigate to={"/signin"}/>}/>
       <Route path="/track-order/:orderId" element={userData?<TrackOrderPage/>:<Navigate to={"/signin"}/>}/>
       <Route path="/shop/:shopId" element={userData?<ShopMenuPage/>:<Navigate to={"/signin"}/>}/>
+      <Route path="/today-deliveries" element={userData?<TodayDeliveries/>:<Navigate to={"/signin"}/>}/>
     </Routes>
   )
 }

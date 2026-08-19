@@ -30,20 +30,14 @@ function TrackOrderPage(){
 
   useEffect(()=>{
     if(!socket)return;
-
     const handleDeliveryLocation=({orderId:incomingOrderId,shopOrderId,deliveryBoyId,latitude,longitude})=>{
       if(incomingOrderId?.toString()!==orderId?.toString())return;
-
-      console.log("Live delivery location received:",{deliveryBoyId,latitude,longitude});
-
       setLiveLocation((prev)=>({
         ...prev,
         [deliveryBoyId]:{latitude,longitude}
       }));
     };
-
     socket.on("updateDeliveryLocation",handleDeliveryLocation);
-
     return()=>{
       socket.off("updateDeliveryLocation",handleDeliveryLocation);
     };
@@ -91,7 +85,6 @@ function TrackOrderPage(){
   }
 
   const {_id,paymentMethod,totalAmount,user,deliveryAddress,shopOrders=[]}=currentOrder;
-
   return(
     <div className="min-h-screen bg-gray-50">
       <header className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm">
@@ -108,7 +101,6 @@ function TrackOrderPage(){
           </button>
         </div>
       </header>
-
       <main className="max-w-5xl mx-auto px-3 sm:px-5 lg:px-6 py-4 sm:py-5">
         <section className="mb-4 sm:mb-5">
           <p className="text-[10px] sm:text-xs text-gray-500">Track your order</p>
@@ -116,7 +108,6 @@ function TrackOrderPage(){
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#172b4d]">Order #{_id?.slice(-8).toUpperCase()}</h1>
           </div>
         </section>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
           <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-4">
             <div className="flex items-center gap-3">
@@ -135,7 +126,6 @@ function TrackOrderPage(){
               </div>
             </div>
           </div>
-
           <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-4">
             <div className="flex items-start gap-3">
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-orange-100 flex items-center justify-center shrink-0">
@@ -148,21 +138,17 @@ function TrackOrderPage(){
             </div>
           </div>
         </div>
-
         <div className="space-y-4">
           {shopOrders.map((shopOrder)=>{
             const shop=shopOrder?.shop;
             const deliveryBoy=shopOrder?.assignedDeliveryBoy;
             const customerLocation={latitude:deliveryAddress?.latitude,longitude:deliveryAddress?.longitude};
             const liveDeliveryBoyLocation=deliveryBoy?._id?liveLocation[deliveryBoy._id]:null;
-
             const databaseDeliveryBoyLocation=deliveryBoy?.location?.coordinates?.length===2?{
               latitude:deliveryBoy.location.coordinates[1],
               longitude:deliveryBoy.location.coordinates[0]
             }:null;
-
             const deliveryBoyLocation=liveDeliveryBoyLocation||databaseDeliveryBoyLocation;
-
             return(
               <section key={shopOrder._id} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                 <div className="p-3 sm:p-4 lg:p-5">
@@ -177,12 +163,10 @@ function TrackOrderPage(){
                         <p className="text-[10px] sm:text-xs text-gray-500 truncate">{shop?.city}, {shop?.state}</p>
                       </div>
                     </div>
-
                     <span className={`shrink-0 px-2 sm:px-2.5 py-1 rounded-full text-[9px] sm:text-[11px] font-semibold whitespace-nowrap ${shopOrder.status==="Out for Delivery"?"bg-purple-50 text-purple-700 border border-purple-200":shopOrder.status==="Delivered"?"bg-green-50 text-green-700 border border-green-200":"bg-orange-50 text-orange-600 border border-orange-200"}`}>
                       {shopOrder.status}
                     </span>
                   </div>
-
                   <div className="mt-3 bg-gray-50 rounded-lg border border-gray-100 p-3">
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-orange-100 flex items-center justify-center shrink-0">
@@ -201,13 +185,11 @@ function TrackOrderPage(){
                       </div>
                     </div>
                   </div>
-
                   <div className="mt-3 border border-gray-200 rounded-lg p-3">
                     <div className="flex items-center gap-2 mb-2">
                       <FaBoxOpen className="text-orange-500 text-sm"/>
                       <h3 className="text-xs sm:text-sm font-semibold text-[#172b4d]">Order Items</h3>
                     </div>
-
                     <div className="space-y-0">
                       {shopOrder?.shopOrderItems?.map((item)=>(
                         <div key={item._id} className="flex items-center justify-between gap-3 py-2 border-b border-gray-100 last:border-0">
@@ -219,13 +201,11 @@ function TrackOrderPage(){
                         </div>
                       ))}
                     </div>
-
                     <div className="mt-2 pt-2 border-t border-gray-200 flex items-center justify-between">
                       <span className="text-xs sm:text-sm text-gray-500">Subtotal</span>
                       <span className="text-base sm:text-lg font-bold text-orange-500">₹{shopOrder.subTotalAmount}</span>
                     </div>
                   </div>
-
                   <div className="mt-3 border border-gray-200 rounded-lg p-3">
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center shrink-0">
@@ -237,14 +217,12 @@ function TrackOrderPage(){
                       </div>
                     </div>
                   </div>
-
                   <div className="mt-4">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <FaMapMarkerAlt className="text-orange-500 text-sm"/>
                         <h3 className="text-xs sm:text-sm font-semibold text-[#172b4d]">Live Delivery Tracking</h3>
                       </div>
-
                       {deliveryBoyLocation?(
                         <span className="flex items-center gap-1.5 text-[10px] sm:text-xs text-green-600 font-medium">
                           <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"/>
@@ -254,7 +232,6 @@ function TrackOrderPage(){
                         <span className="text-[10px] sm:text-xs text-gray-400">Waiting</span>
                       )}
                     </div>
-
                     {shopOrder?.status!=="Delivered"&&(
                       <div className="rounded-xl overflow-hidden border border-gray-200">
                         <LiveTrackingMap deliveryBoyLocation={deliveryBoyLocation} customerLocation={customerLocation} deliveryBoy={deliveryBoy} customer={user}/>
@@ -266,7 +243,6 @@ function TrackOrderPage(){
             );
           })}
         </div>
-
         <div className="mt-4 bg-white rounded-xl border border-gray-200 p-3 sm:p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs sm:text-sm font-semibold text-gray-500">Total Order Amount</span>
