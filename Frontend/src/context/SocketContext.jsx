@@ -21,8 +21,6 @@ export const SocketProvider = ({ children }) => {
     });
 
     socketInstance.on("connect", () => {
-      console.log("Socket connected:", socketInstance.id);
-
       socketInstance.emit("identity", {
         userId: userData._id,
       });

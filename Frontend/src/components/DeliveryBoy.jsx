@@ -91,11 +91,6 @@ function DeliveryBoy(){
             shopOrderId:currentOrder.shopOrder._id
           });
 
-          console.log("Location sent:",{
-            latitude,
-            longitude,
-            shopOrderId:currentOrder.shopOrder._id
-          });
         },
         (error)=>{
           console.log("Location error:",error);
@@ -119,8 +114,6 @@ function DeliveryBoy(){
     if(!socket||userData?.role!=="Delivery Boy")return;
 
     const handleNewDeliveryRequest=(data)=>{
-      console.log("NEW DELIVERY REQUEST:",data);
-
       setAvailableAssignments((prev)=>{
         const exists=prev.some(
           (assignment)=>
