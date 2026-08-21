@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 
-export const serverUrl = "https://axiongo.onrender.com";
+export const serverUrl = import.meta.env.VITE_SERVER_URL;
 
 const SocketContext = createContext(null);
 

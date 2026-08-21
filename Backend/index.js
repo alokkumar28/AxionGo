@@ -16,10 +16,10 @@ import { Server } from "socket.io";
 import { socketHandler } from "./socket.js";
 const app = express();
 const server = http.createServer(app);
-
+const frontend_url = process.env.FRONTEND_URL;
 const io = new Server(server, {
   cors: {
-    origin: "https://axion-go.onrender.com",
+    origin: "frontend_url",
     credentials: true,
   },
 });
@@ -27,7 +27,7 @@ const io = new Server(server, {
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://axion-go.onrender.com",
+    origin: "frontend_url",
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   })
