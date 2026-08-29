@@ -30,8 +30,8 @@ Desktop.ini
 *.swp
 *.swo
 
-uploads/
-public/uploads/
+Backend/public/*
+!Backend/public/.gitkeep
 
 tmp/
 temp/

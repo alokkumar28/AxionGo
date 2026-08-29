@@ -1,10 +1,14 @@
-import multer from 'multer'
+import multer from "multer";
+import path from "path";
+
 const storage = multer.diskStorage({
-    destination:(req, file , cb)=>{
-        cb(null , "./public")
+    destination: (req, file, cb) => {
+        cb(null, path.resolve("public"));
     },
-    filename:(req, file , cb)=>{
-        cb(null , file.originalname)
+    filename: (req, file, cb) => {
+        const uniqueName = `${Date.now()}-${file.originalname}`;
+        cb(null, uniqueName);
     }
-})
-export const upload=multer({storage})
+});
+
+export const upload = multer({ storage });
